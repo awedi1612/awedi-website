@@ -7,9 +7,7 @@
     <meta name="description" content="awedi Dienstleistungen – Ihr professioneller Partner für Logo-Design, Webseiten, Branding, Social Media und technischen Support.">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts werden nur nach Cookie-Einwilligung geladen (DSGVO) -->
 
     <script>
         tailwind.config = {
@@ -152,6 +150,57 @@
             100% { background-position: 0%   50%; }
         }
 
+        /* Skip-to-content link */
+        .skip-link {
+            position: absolute;
+            top: -100%;
+            left: 1rem;
+            background: #EC4899;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0 0 0.75rem 0.75rem;
+            font-weight: 600;
+            z-index: 99999;
+            text-decoration: none;
+        }
+        .skip-link:focus { top: 0; outline: 3px solid #BE185D; outline-offset: 2px; }
+
+        /* Cookie Banner */
+        #cookie-overlay { display: none; }
+        #cookie-overlay.active { display: flex; }
+
+        /* Toggle Switch */
+        .cookie-toggle {
+            appearance: none;
+            width: 44px;
+            height: 24px;
+            background: #E2E8F0;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+        .cookie-toggle:checked { background: linear-gradient(90deg, #EC4899, #06B6D4); }
+        .cookie-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: left 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+        .cookie-toggle:checked::after { left: 22px; }
+        .cookie-toggle:disabled { opacity: 0.5; cursor: not-allowed; }
+        .cookie-toggle:focus-visible { outline: 2px solid #EC4899; outline-offset: 3px; }
+
+        /* Focus-visible global */
+        :focus-visible { outline: 2px solid #EC4899; outline-offset: 2px; }
+
         .gradient-text-animated {
             background: linear-gradient(135deg, #EC4899, #06B6D4, #F472B6, #EC4899);
             background-size: 300% 300%;
@@ -164,6 +213,76 @@
 </head>
 
 <body class="bg-surface text-slate-800 antialiased">
+
+    <!-- Skip to main content (Barrierefreiheit) -->
+    <a href="#main-content" class="skip-link">Zum Hauptinhalt springen</a>
+
+    <!-- ===== COOKIE BANNER MODAL ===== -->
+    <div id="cookie-overlay" class="fixed inset-0 z-[9998] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="cookie-title" aria-describedby="cookie-desc">
+        <div class="bg-white rounded-3xl shadow-2xl shadow-pink-200/40 border border-pink-100 max-w-md w-full p-8 relative">
+            <!-- Icon -->
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mx-auto mb-5" aria-hidden="true">
+                <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h2 id="cookie-title" class="font-heading font-black text-2xl text-slate-900 text-center mb-2">Wir nutzen Cookies</h2>
+            <p id="cookie-desc" class="text-slate-500 text-sm text-center leading-relaxed mb-6">Wir verwenden Cookies und ähnliche Technologien, um unsere Website zu verbessern und Ihnen relevante Inhalte anzuzeigen. Einige Cookies sind technisch notwendig, andere helfen uns, unsere Website weiterzuentwickeln.</p>
+
+            <!-- Simple view -->
+            <div id="cookie-simple-view">
+                <div class="flex flex-col gap-3">
+                    <button id="cookie-accept-all" class="w-full bg-gradient-to-r from-primary to-accent text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-pink-200 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer" id="cookie-first-focus">Alle akzeptieren</button>
+                    <button id="cookie-reject-all" class="w-full bg-slate-100 text-slate-700 py-3 rounded-xl font-medium hover:bg-slate-200 transition-all duration-200 cursor-pointer">Nur notwendige</button>
+                    <button id="cookie-settings-toggle" class="w-full text-primary text-sm font-medium underline-offset-2 hover:underline cursor-pointer py-1">Einstellungen anpassen</button>
+                </div>
+            </div>
+
+            <!-- Detail view (hidden initially) -->
+            <div id="cookie-detail-view" class="hidden">
+                <div class="space-y-4 mb-6">
+                    <!-- Notwendig -->
+                    <div class="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                        <input type="checkbox" class="cookie-toggle mt-0.5" checked disabled aria-label="Notwendige Cookies (immer aktiv)">
+                        <div>
+                            <div class="font-semibold text-slate-900 text-sm">Notwendig</div>
+                            <div class="text-slate-500 text-xs mt-0.5">Technisch erforderlich für den Betrieb der Website. Immer aktiv.</div>
+                        </div>
+                    </div>
+                    <!-- Komfort -->
+                    <div class="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                        <input type="checkbox" id="toggle-komfort" class="cookie-toggle mt-0.5" aria-label="Komfort-Cookies (Google Fonts)">
+                        <div>
+                            <div class="font-semibold text-slate-900 text-sm">Komfort</div>
+                            <div class="text-slate-500 text-xs mt-0.5">Google Fonts – lädt Schriftarten von Google-Servern für ein besseres Schriftbild.</div>
+                        </div>
+                    </div>
+                    <!-- Statistiken -->
+                    <div class="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                        <input type="checkbox" id="toggle-statistiken" class="cookie-toggle mt-0.5" aria-label="Statistik-Cookies (Google Analytics)">
+                        <div>
+                            <div class="font-semibold text-slate-900 text-sm">Statistiken</div>
+                            <div class="text-slate-500 text-xs mt-0.5">Google Analytics – hilft uns zu verstehen, wie Besucher unsere Website nutzen.</div>
+                        </div>
+                    </div>
+                    <!-- Marketing -->
+                    <div class="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                        <input type="checkbox" id="toggle-marketing" class="cookie-toggle mt-0.5" aria-label="Marketing-Cookies (Meta Pixel)">
+                        <div>
+                            <div class="font-semibold text-slate-900 text-sm">Marketing</div>
+                            <div class="text-slate-500 text-xs mt-0.5">Meta Pixel – ermöglicht zielgerichtete Werbung auf Facebook und Instagram.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <button id="cookie-save-selection" class="w-full bg-gradient-to-r from-primary to-accent text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-pink-200 transition-all duration-200 cursor-pointer">Auswahl speichern</button>
+                    <button id="cookie-back" class="w-full text-slate-500 text-sm hover:text-slate-700 cursor-pointer py-1">Zurück</button>
+                </div>
+            </div>
+
+            <p class="text-center text-xs text-slate-400 mt-5">
+                <a href="#" class="hover:text-primary transition-colors">Datenschutzerklärung</a> · <a href="#" class="hover:text-primary transition-colors">Impressum</a>
+            </p>
+        </div>
+    </div>
 
     <!-- Scroll Progress Bar -->
     <div id="progress-bar" style="width: 0%" role="progressbar" aria-label="Lesefortschritt"></div>
@@ -211,7 +330,7 @@
     </nav>
 
     <!-- ===== HERO ===== -->
-    <section class="min-h-screen pt-28 pb-20 px-4 relative overflow-hidden" aria-labelledby="hero-heading">
+    <section id="main-content" class="min-h-screen pt-28 pb-20 px-4 relative overflow-hidden" aria-labelledby="hero-heading">
         <!-- WebGL Shader Background -->
         <canvas id="shader-canvas" class="absolute inset-0 w-full h-full" aria-hidden="true" style="pointer-events:none;"></canvas>
         <!-- Demo-style veil overlay -->
@@ -753,6 +872,19 @@
                             <p class="field-error-msg" id="message-error">Bitte schreiben Sie eine kurze Nachricht (min. 10 Zeichen).</p>
                         </div>
 
+                        <!-- DSGVO Datenschutz-Einwilligung -->
+                        <div>
+                            <div class="flex items-start gap-3">
+                                <input type="checkbox" id="privacy" name="privacy" required
+                                    class="mt-1 w-4 h-4 rounded border-pink-300 text-primary cursor-pointer flex-shrink-0"
+                                    aria-describedby="privacy-error">
+                                <label for="privacy" class="text-sm text-slate-600 cursor-pointer leading-relaxed">
+                                    Ich habe die <a href="#" class="text-primary underline hover:text-primary-dark">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Daten zur Bearbeitung meiner Anfrage zu. <span aria-hidden="true">*</span><span class="sr-only">(Pflichtfeld)</span>
+                                </label>
+                            </div>
+                            <p class="field-error-msg" id="privacy-error">Bitte stimmen Sie der Datenschutzerklärung zu.</p>
+                        </div>
+
                         <button type="submit" id="submit-btn"
                             class="w-full bg-gradient-to-r from-primary to-accent text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl hover:shadow-pink-200 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 cursor-pointer flex items-center justify-center gap-2">
                             <span id="btn-text">Anfrage absenden</span>
@@ -827,6 +959,7 @@
                 <div class="flex gap-6">
                     <a href="#" class="hover:text-primary transition-colors duration-200 cursor-pointer">Impressum</a>
                     <a href="#" class="hover:text-primary transition-colors duration-200 cursor-pointer">Datenschutz</a>
+                    <button id="open-cookie-settings" class="hover:text-primary transition-colors duration-200 cursor-pointer">Cookie-Einstellungen</button>
                 </div>
             </div>
         </div>
@@ -906,18 +1039,21 @@
             const nameVal = document.getElementById('name').value.trim();
             const emailVal = document.getElementById('email').value.trim();
             const messageVal = document.getElementById('message').value.trim();
+            const privacyChecked = document.getElementById('privacy').checked;
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
             const nameErr = nameVal.length === 0;
             const emailErr = !emailRegex.test(emailVal);
             const messageErr = messageVal.length < 10;
+            const privacyErr = !privacyChecked;
 
             setFieldError('name', 'name-error', nameErr);
             setFieldError('email', 'email-error', emailErr);
             setFieldError('message', 'message-error', messageErr);
+            setFieldError('privacy', 'privacy-error', privacyErr);
 
-            if (nameErr || emailErr || messageErr) {
-                form.querySelector('.field-error').focus();
+            if (nameErr || emailErr || messageErr || privacyErr) {
+                form.querySelector('.field-error')?.focus();
                 return;
             }
 
@@ -940,6 +1076,9 @@
             document.getElementById(id).addEventListener('input', () => {
                 setFieldError(id, id + '-error', false);
             });
+        });
+        document.getElementById('privacy').addEventListener('change', () => {
+            setFieldError('privacy', 'privacy-error', false);
         });
 
         // Smooth scroll for anchor links
@@ -1102,6 +1241,134 @@
             resize();
             render();
         })();
+
+        // ===== COOKIE CONSENT (DSGVO) =====
+        const CONSENT_KEY = 'awedi_cookie_consent';
+
+        function getCookieConsent() {
+            try { return JSON.parse(localStorage.getItem(CONSENT_KEY)); } catch { return null; }
+        }
+
+        function saveCookieConsent(prefs) {
+            localStorage.setItem(CONSENT_KEY, JSON.stringify({ ...prefs, timestamp: Date.now() }));
+        }
+
+        function loadGoogleFonts() {
+            if (document.querySelector('link[data-gf]')) return;
+            const pc1 = Object.assign(document.createElement('link'), { rel: 'preconnect', href: 'https://fonts.googleapis.com' });
+            const pc2 = Object.assign(document.createElement('link'), { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' });
+            const lnk = Object.assign(document.createElement('link'), { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap' });
+            [pc1, pc2, lnk].forEach(el => { el.setAttribute('data-gf', '1'); document.head.appendChild(el); });
+        }
+
+        function loadGoogleAnalytics() {
+            if (document.querySelector('script[data-ga]')) return;
+            // Hier die eigene Google Analytics Measurement-ID eintragen (z.B. G-XXXXXXXXXX)
+            const GA_ID = 'G-XXXXXXXXXX';
+            const s = Object.assign(document.createElement('script'), { src: 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID, async: true });
+            s.setAttribute('data-ga', '1');
+            document.head.appendChild(s);
+            window.dataLayer = window.dataLayer || [];
+            window.gtag = function() { dataLayer.push(arguments); };
+            gtag('js', new Date());
+            gtag('config', GA_ID, { anonymize_ip: true });
+        }
+
+        function loadMetaPixel() {
+            if (window.fbq) return;
+            // Hier die eigene Meta Pixel-ID eintragen (z.B. 1234567890)
+            const PIXEL_ID = 'XXXXXXXXXXXXXXXXXX';
+            !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', PIXEL_ID);
+            fbq('track', 'PageView');
+        }
+
+        function applyConsent(prefs) {
+            if (prefs.komfort)     loadGoogleFonts();
+            if (prefs.statistiken) loadGoogleAnalytics();
+            if (prefs.marketing)   loadMetaPixel();
+        }
+
+        function hideBanner() {
+            const el = document.getElementById('cookie-overlay');
+            el.classList.remove('active');
+            el.setAttribute('aria-hidden', 'true');
+        }
+
+        function showBanner() {
+            const el = document.getElementById('cookie-overlay');
+            el.classList.add('active');
+            el.removeAttribute('aria-hidden');
+            document.getElementById('cookie-accept-all').focus();
+        }
+
+        // Focus trap for modal
+        function trapFocus(modal) {
+            const focusable = modal.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])');
+            const first = focusable[0], last = focusable[focusable.length - 1];
+            modal.addEventListener('keydown', (e) => {
+                if (e.key !== 'Tab') return;
+                if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+                else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
+            });
+            modal.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideBanner(); });
+        }
+
+        function initCookieBanner() {
+            const overlay = document.getElementById('cookie-overlay');
+            const existing = getCookieConsent();
+
+            if (existing) { applyConsent(existing); return; }
+
+            showBanner();
+            trapFocus(overlay);
+
+            document.getElementById('cookie-accept-all').addEventListener('click', () => {
+                const prefs = { notwendig: true, komfort: true, statistiken: true, marketing: true };
+                saveCookieConsent(prefs);
+                applyConsent(prefs);
+                hideBanner();
+            });
+
+            document.getElementById('cookie-reject-all').addEventListener('click', () => {
+                saveCookieConsent({ notwendig: true, komfort: false, statistiken: false, marketing: false });
+                hideBanner();
+            });
+
+            document.getElementById('cookie-settings-toggle').addEventListener('click', () => {
+                document.getElementById('cookie-simple-view').classList.add('hidden');
+                document.getElementById('cookie-detail-view').classList.remove('hidden');
+                document.getElementById('toggle-komfort').focus();
+            });
+
+            document.getElementById('cookie-back').addEventListener('click', () => {
+                document.getElementById('cookie-detail-view').classList.add('hidden');
+                document.getElementById('cookie-simple-view').classList.remove('hidden');
+                document.getElementById('cookie-accept-all').focus();
+            });
+
+            document.getElementById('cookie-save-selection').addEventListener('click', () => {
+                const prefs = {
+                    notwendig: true,
+                    komfort:     document.getElementById('toggle-komfort').checked,
+                    statistiken: document.getElementById('toggle-statistiken').checked,
+                    marketing:   document.getElementById('toggle-marketing').checked,
+                };
+                saveCookieConsent(prefs);
+                applyConsent(prefs);
+                hideBanner();
+            });
+        }
+
+        document.getElementById('open-cookie-settings').addEventListener('click', () => {
+            localStorage.removeItem(CONSENT_KEY);
+            document.getElementById('cookie-detail-view').classList.add('hidden');
+            document.getElementById('cookie-simple-view').classList.remove('hidden');
+            showBanner();
+            trapFocus(document.getElementById('cookie-overlay'));
+        });
+
+        initCookieBanner();
     </script>
 
 </body>
