@@ -826,6 +826,10 @@
                     <h3 class="font-heading font-bold text-2xl text-slate-900 mb-6">Kostenlose Anfrage senden</h3>
 
                     <form id="contact-form" class="space-y-5" novalidate>
+                        <input type="hidden" name="access_key" value="3c09c026-d85f-4fbe-9bb3-febc615ee847">
+                        <input type="hidden" name="subject" value="Neue Anfrage über awedi.info">
+                        <input type="hidden" name="from_name" value="awedi Website">
+                        <input type="checkbox" name="botcheck" style="display:none">
                         <div class="grid sm:grid-cols-2 gap-4">
                             <div>
                                 <label for="name" class="block text-sm font-medium text-slate-700 mb-1.5">Name <span aria-hidden="true">*</span><span class="sr-only">(Pflichtfeld)</span></label>
@@ -1062,13 +1066,28 @@
             submitBtn.classList.remove('hover:-translate-y-0.5');
             btnText.textContent = 'Wird gesendet...';
 
-            // Replace setTimeout with real backend/EmailJS call as needed
-            setTimeout(() => {
-                submitBtn.classList.add('hidden');
-                formSuccess.classList.remove('hidden');
-                form.reset();
-                formSuccess.focus();
-            }, 1500);
+            const formData = new FormData(form);
+            fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        submitBtn.classList.add('hidden');
+                        formSuccess.classList.remove('hidden');
+                        form.reset();
+                        formSuccess.focus();
+                    } else {
+                        btnText.textContent = 'Fehler – bitte erneut versuchen';
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                        submitBtn.classList.add('hover:-translate-y-0.5');
+                    }
+                })
+                .catch(() => {
+                    btnText.textContent = 'Fehler – bitte erneut versuchen';
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                    submitBtn.classList.add('hover:-translate-y-0.5');
+                });
         });
 
         // Clear errors on input
