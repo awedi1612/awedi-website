@@ -1,408 +1,748 @@
 <!DOCTYPE html>
-<html lang="de" class="scroll-smooth" data-theme="light">
+<html lang="de" data-lang="de" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>awedi — Design & Technik aus einer Hand</title>
-  <meta name="description" content="Freelancer für Logo-Design, Webseiten, Branding, Social Media und Technik-Support. Professionell, persönlich, zuverlässig.">
+  <title>awedi Dienstleistungen — IT, Digitalisierung & Handwerksvermittlung</title>
+  <meta name="description" content="Ihr regionaler Partner für IT-Infrastruktur, Digitalisierung, Automatisierung und Handwerksvermittlung. Persönlich, schnell, zuverlässig.">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts werden nur nach Cookie-Einwilligung geladen (DSGVO) -->
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
+
     :root {
-      --bg: #FFFFFF;
-      --bg-sub: #F4F4F5;
-      --border: #E4E4E7;
-      --text: #09090B;
-      --muted: #71717A;
-      --accent: #6366F1;
-      --accent-hover: #4F46E5;
+      --navy:       #0F2044;
+      --navy-light: #162B55;
+      --blue:       #1D4ED8;
+      --blue-mid:   #2563EB;
+      --blue-light: #3B82F6;
+      --cyan:       #0EA5E9;
+      --white:      #FFFFFF;
+      --off-white:  #F8FAFC;
+      --blue-tint:  #EFF6FF;
+      --border:     #DBEAFE;
+      --slate:      #64748B;
+      --slate-dark: #334155;
+      --text:       #0F172A;
+      --bg:         #FFFFFF;
+      --bg-sub:     #F8FAFC;
+      --card-bg:    #FFFFFF;
     }
+
     [data-theme="dark"] {
-      --bg: #09090B;
-      --bg-sub: #111113;
-      --border: #27272A;
-      --text: #FAFAFA;
-      --muted: #A1A1AA;
-      --accent: #818CF8;
-      --accent-hover: #6366F1;
+      --navy:       #0A1628;
+      --navy-light: #0F2044;
+      --white:      #E2E8F0;
+      --off-white:  #1E293B;
+      --blue-tint:  #1E3A5F;
+      --border:     #1E3A5F;
+      --slate:      #94A3B8;
+      --slate-dark: #CBD5E1;
+      --text:       #F1F5F9;
+      --bg:         #0D1117;
+      --bg-sub:     #111827;
+      --card-bg:    #1E293B;
     }
-    * { font-family: 'Syne', system-ui, sans-serif; box-sizing: border-box; }
-    body { background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; margin: 0; }
 
-    .skip-link { position:absolute;top:-100%;left:1rem;background:var(--accent);color:#fff;padding:.75rem 1.5rem;border-radius:0 0 .5rem .5rem;font-weight:600;z-index:99999;text-decoration:none; }
-    .skip-link:focus { top:0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+      overflow-x: hidden;
+    }
 
-    /* Navbar */
-    #main-nav { transition: border-color .3s, background .3s, backdrop-filter .3s; border-bottom: 1px solid transparent; }
-    #main-nav.scrolled { border-color: var(--border); background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(12px); }
+    h1, h2, h3, h4 {
+      font-family: 'Outfit', system-ui, sans-serif;
+      letter-spacing: -0.02em;
+    }
 
-    /* Mobile menu */
-    #mobile-menu { max-height:0; overflow:hidden; transition:max-height .3s ease; }
-    #mobile-menu.open { max-height:400px; }
+    /* ── Progress bar ── */
+    #progress { position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan));z-index:9999;transition:width .1s;pointer-events:none; }
 
-    /* Fade animations */
-    .fade-up { opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s ease; }
-    .fade-up.visible { opacity:1; transform:translateY(0); }
-    @media (prefers-reduced-motion:reduce) { .fade-up { opacity:1; transform:none; transition:none; } * { animation-duration:.01ms !important; } }
+    /* ── Navbar ── */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      transition: background 0.3s, border-color 0.3s, backdrop-filter 0.3s;
+      border-bottom: 1px solid transparent;
+    }
+    #nav.scrolled {
+      background: color-mix(in srgb, var(--bg) 90%, transparent);
+      backdrop-filter: blur(16px);
+      border-color: var(--border);
+    }
 
-    /* Service rows */
-    .service-row { border-top: 1px solid var(--border); transition: background .15s; }
-    .service-row:hover { background: var(--bg-sub); }
+    /* ── Mobile menu ── */
+    #mobile-menu { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+    #mobile-menu.open { max-height: 500px; }
 
-    /* Form fields */
-    .field { width:100%; padding:.625rem .875rem; background:var(--bg); border:1px solid var(--border); border-radius:.5rem; color:var(--text); font-size:.875rem; font-family:inherit; transition:border-color .2s; outline:none; }
-    .field::placeholder { color:var(--muted); }
-    .field:focus { border-color:var(--accent); }
-    .field-err-border { border-color:#EF4444 !important; }
-    .err-msg { color:#EF4444; font-size:.7rem; margin-top:.25rem; display:none; }
-    .err-msg.show { display:block; }
+    /* ── Skip link ── */
+    .skip { position:absolute;top:-100%;left:1rem;background:var(--blue);color:#fff;padding:.5rem 1rem;border-radius:0 0 6px 6px;font-weight:600;z-index:9999;text-decoration:none; }
+    .skip:focus { top:0; }
 
-    /* Cookie */
+    /* ── Hero network SVG ── */
+    #network-svg { opacity: 0.12; }
+    [data-theme="dark"] #network-svg { opacity: 0.2; }
+
+    /* ── Fade animations ── */
+    .fade { opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease; }
+    .fade.in { opacity:1;transform:none; }
+    @media(prefers-reduced-motion:reduce) { .fade{opacity:1;transform:none;transition:none;} }
+
+    /* ── Service cards ── */
+    .scard {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .scard::before {
+      content: '';
+      position: absolute; top:0;left:0;right:0;height:3px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      opacity: 0;
+      transition: opacity .25s;
+    }
+    .scard:hover { transform: translateY(-4px); box-shadow: 0 20px 48px -12px rgba(29,78,216,.18); border-color: var(--blue-light); }
+    .scard:hover::before { opacity: 1; }
+
+    /* ── Icon box ── */
+    .icon-box {
+      width: 52px; height: 52px; border-radius: 12px;
+      background: var(--blue-tint);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    [data-theme="dark"] .icon-box { background: rgba(59,130,246,.15); }
+
+    /* ── Step line ── */
+    .step-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+    /* ── Stat cell ── */
+    .stat-cell {
+      padding: 1.75rem 2rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stat-cell:nth-child(2) { border-right: none; }
+    .stat-cell:nth-child(3) { border-bottom: none; }
+    .stat-cell:nth-child(4) { border-right: none; border-bottom: none; }
+
+    /* ── Testimonial ── */
+    .testimonial {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+    }
+
+    /* ── Process step ── */
+    .pstep { display:flex;flex-direction:column;align-items:center;text-align:center;flex:1; }
+
+    /* ── Form fields ── */
+    .field {
+      width:100%;padding:.625rem .875rem;
+      background:var(--bg);border:1px solid var(--border);
+      border-radius:8px;color:var(--text);font-family:inherit;
+      font-size:.875rem;transition:border-color .2s;outline:none;
+    }
+    .field::placeholder { color:var(--slate); }
+    .field:focus { border-color:var(--blue); }
+    .field-err { border-color:#EF4444 !important; }
+    .err { color:#EF4444;font-size:.7rem;margin-top:.25rem;display:none; }
+    .err.show { display:block; }
+
+    /* ── Cookie ── */
     #cookie-overlay { display:none; }
     #cookie-overlay.active { display:flex; }
-    .ctoggle { appearance:none; width:38px; height:21px; background:var(--border); border-radius:11px; position:relative; cursor:pointer; transition:background .2s; flex-shrink:0; }
-    .ctoggle:checked { background:var(--accent); }
-    .ctoggle::after { content:''; position:absolute; top:2px; left:2px; width:17px; height:17px; background:#fff; border-radius:50%; transition:left .2s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
-    .ctoggle:checked::after { left:19px; }
-    .ctoggle:disabled { opacity:.4; cursor:not-allowed; }
+    .ctoggle{appearance:none;width:38px;height:21px;background:var(--border);border-radius:11px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+    .ctoggle:checked{background:var(--blue);}
+    .ctoggle::after{content:'';position:absolute;top:2px;left:2px;width:17px;height:17px;background:#fff;border-radius:50%;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+    .ctoggle:checked::after{left:19px;}
+    .ctoggle:disabled{opacity:.4;cursor:not-allowed;}
 
-    /* Accent text */
-    .accent-text { background:linear-gradient(135deg, var(--accent), #C084FC); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    /* ── Lang ── */
+    .lang-btn { font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;padding:.25rem .6rem;border-radius:5px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--slate);transition:all .2s; }
+    .lang-btn.active { background:var(--blue);color:#fff;border-color:var(--blue); }
 
-    /* Progress bar */
-    #progress-bar { position:fixed; top:0; left:0; height:2px; background:var(--accent); z-index:9999; pointer-events:none; transition:width .1s; }
+    /* ── Pill badge ── */
+    .pill { display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .85rem;border:1px solid var(--border);border-radius:999px;font-size:.72rem;font-weight:600;color:var(--slate);background:var(--bg-sub); }
 
-    /* Back to top */
-    #back-to-top { opacity:0; pointer-events:none; transition:opacity .3s; }
-    #back-to-top.visible { opacity:1; pointer-events:auto; }
+    /* ── Gradient text ── */
+    .grad { background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar { width:5px; }
-    ::-webkit-scrollbar-track { background:var(--bg); }
-    ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+    /* ── Pulse ── */
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.35} }
+    .pulse { animation:pulse 2.2s ease infinite; }
 
-    /* Focus */
-    :focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+    /* ── Back to top ── */
+    #btt { opacity:0;pointer-events:none;transition:opacity .3s; }
+    #btt.show { opacity:1;pointer-events:auto; }
 
-    /* Pulse dot */
-    @keyframes pulse-dot { 0%,100%{opacity:1}50%{opacity:.4} }
-    .pulse-dot { animation:pulse-dot 2s ease infinite; }
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar{width:4px;}
+    ::-webkit-scrollbar-track{background:var(--bg);}
+    ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
 
-    /* Grid bg */
-    .grid-bg { background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px); background-size:64px 64px; }
+    /* ── Focus ── */
+    :focus-visible { outline:2px solid var(--blue);outline-offset:2px; }
 
-    /* Stats grid */
-    .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
-    .stat-cell { padding:1.75rem; background:var(--bg); }
+    /* ── Divider wave ── */
+    .wave-divider { overflow:hidden;line-height:0; }
+    .wave-divider svg { display:block; }
 
-    /* Two-col layout */
-    @media (min-width:768px) {
-      .two-col { display:grid; grid-template-columns:1fr 1fr; gap:4rem; }
-      .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.5rem; }
+    /* ── Tag ── */
+    .tag { font-size:.65rem;padding:.18rem .55rem;border-radius:4px;background:var(--blue-tint);color:var(--blue);font-weight:600;letter-spacing:.04em;text-transform:uppercase; }
+    [data-theme="dark"] .tag { background:rgba(59,130,246,.15);color:var(--blue-light); }
+
+    /* ── Check list ── */
+    .check-item { display:flex;align-items:flex-start;gap:.625rem;font-size:.875rem;color:var(--slate-dark);line-height:1.6; }
+    .check-dot { width:18px;height:18px;border-radius:50%;background:var(--blue-tint);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px; }
+    [data-theme="dark"] .check-dot { background:rgba(59,130,246,.2); }
+
+    /* ── Section label ── */
+    .section-label { font-size:.68rem;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.1em; }
+
+    /* ── CTA primary ── */
+    .btn-primary {
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.75rem 1.5rem;
+      background:linear-gradient(135deg,var(--blue),var(--blue-mid));
+      color:#fff;border-radius:9px;font-weight:600;font-size:.9rem;
+      text-decoration:none;border:none;cursor:pointer;font-family:inherit;
+      transition:transform .2s,box-shadow .2s,opacity .2s;
+      box-shadow:0 4px 14px -2px rgba(29,78,216,.35);
     }
+    .btn-primary:hover { transform:translateY(-2px);box-shadow:0 8px 24px -4px rgba(29,78,216,.4); }
+    .btn-primary:active { transform:translateY(0); }
+
+    /* ── CTA secondary ── */
+    .btn-secondary {
+      display:inline-flex;align-items:center;gap:.5rem;
+      padding:.75rem 1.5rem;
+      background:transparent;
+      color:var(--text);border:1px solid var(--border);border-radius:9px;
+      font-weight:500;font-size:.9rem;text-decoration:none;
+      transition:background .2s,border-color .2s;font-family:inherit;cursor:pointer;
+    }
+    .btn-secondary:hover { background:var(--bg-sub);border-color:var(--blue-light); }
+
+    /* ── Hero bg ── */
+    .hero-bg {
+      background:
+        radial-gradient(ellipse 80% 50% at 60% -10%, rgba(29,78,216,.08), transparent),
+        radial-gradient(ellipse 50% 60% at 0% 80%, rgba(14,165,233,.05), transparent),
+        var(--bg);
+    }
+    [data-theme="dark"] .hero-bg {
+      background:
+        radial-gradient(ellipse 80% 50% at 60% -10%, rgba(29,78,216,.15), transparent),
+        radial-gradient(ellipse 50% 60% at 0% 80%, rgba(14,165,233,.1), transparent),
+        var(--bg);
+    }
+
+    /* ── Grid pattern ── */
+    .grid-pat {
+      background-image: linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
+      background-size: 56px 56px;
+    }
+
+    /* ── Contact card ── */
+    .contact-link {
+      display:flex;align-items:center;gap:.875rem;
+      padding:1rem 1.25rem;border:1px solid var(--border);
+      border-radius:10px;text-decoration:none;
+      transition:background .2s,border-color .2s,transform .2s;
+    }
+    .contact-link:hover { background:var(--bg-sub);border-color:var(--blue-light);transform:translateX(4px); }
+
+    /* ── Number animate ── */
+    @keyframes count-up { from { opacity:0;transform:translateY(8px); } to { opacity:1;transform:none; } }
+    .stat-num { animation: count-up .6s ease forwards; opacity:0; }
   </style>
 </head>
 <body>
 
-<a href="#main-content" class="skip-link">Zum Hauptinhalt springen</a>
-<div id="progress-bar" style="width:0%"></div>
+<a href="#main" class="skip" data-de="Zum Hauptinhalt" data-en="Skip to content">Zum Hauptinhalt</a>
+<div id="progress" style="width:0%"></div>
 
-<!-- ===== COOKIE BANNER ===== -->
-<div id="cookie-overlay" class="fixed inset-0 z-[9998] items-center justify-center p-4" style="background:rgba(0,0,0,.6);backdrop-filter:blur(4px)" role="dialog" aria-modal="true" aria-labelledby="cookie-title" aria-describedby="cookie-desc">
-  <div style="background:var(--bg);border:1px solid var(--border);border-radius:14px;max-width:380px;width:100%;padding:1.75rem;box-shadow:0 25px 50px rgba(0,0,0,.25)">
+<!-- ═══════════════════════════════════════════
+     COOKIE BANNER
+════════════════════════════════════════════ -->
+<div id="cookie-overlay" class="fixed inset-0 z-[9000] items-center justify-center p-4" style="background:rgba(0,0,0,.55);backdrop-filter:blur(4px)" role="dialog" aria-modal="true" aria-labelledby="ck-title">
+  <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:16px;max-width:380px;width:100%;padding:1.75rem;box-shadow:0 32px 64px rgba(0,0,0,.2)">
     <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
-      <div style="width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      <div style="width:34px;height:34px;background:var(--blue);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
       </div>
-      <h2 id="cookie-title" style="font-size:.95rem;font-weight:700;color:var(--text);margin:0">Datenschutz & Cookies</h2>
+      <h2 id="ck-title" style="font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;color:var(--text);margin:0">Datenschutz & Cookies</h2>
     </div>
-    <p id="cookie-desc" style="font-size:.78rem;color:var(--muted);line-height:1.6;margin:0 0 1.25rem">Wir verwenden Cookies für Komfort, Statistiken und Marketing. Einwilligung jederzeit widerrufbar.</p>
-
-    <div id="cookie-simple-view">
+    <p style="font-size:.78rem;color:var(--slate);line-height:1.65;margin:0 0 1.25rem">Wir verwenden Cookies für Komfort, Statistiken und Marketing. Einwilligung jederzeit widerrufbar.</p>
+    <div id="ck-simple">
       <div style="display:flex;flex-direction:column;gap:.5rem">
-        <button id="cookie-accept-all" style="padding:.625rem 1rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-weight:600;font-size:.85rem;cursor:pointer;font-family:inherit">Alle akzeptieren</button>
-        <button id="cookie-reject-all" style="padding:.625rem 1rem;background:var(--bg-sub);color:var(--text);border:1px solid var(--border);border-radius:8px;font-weight:500;font-size:.85rem;cursor:pointer;font-family:inherit">Nur notwendige</button>
-        <button id="cookie-settings-toggle" style="padding:.4rem;color:var(--accent);font-size:.78rem;cursor:pointer;border:none;background:none;font-family:inherit">Einstellungen</button>
+        <button id="ck-all" class="btn-primary" style="width:100%;justify-content:center">Alle akzeptieren</button>
+        <button id="ck-reject" style="padding:.625rem 1rem;background:var(--bg-sub);color:var(--text);border:1px solid var(--border);border-radius:8px;font-weight:500;font-size:.85rem;cursor:pointer;font-family:inherit">Nur notwendige</button>
+        <button id="ck-settings-btn" style="padding:.4rem;color:var(--blue);font-size:.78rem;cursor:pointer;border:none;background:none;font-family:inherit">Einstellungen</button>
       </div>
     </div>
-
-    <div id="cookie-detail-view" style="display:none">
-      <div style="display:flex;flex-direction:column;gap:.625rem;margin-bottom:1rem">
+    <div id="ck-detail" style="display:none">
+      <div style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem;background:var(--bg-sub);border-radius:8px;gap:1rem">
-          <div><div style="font-size:.78rem;font-weight:600;color:var(--text)">Notwendig</div><div style="font-size:.7rem;color:var(--muted)">Technisch erforderlich</div></div>
+          <div><div style="font-size:.78rem;font-weight:600;color:var(--text)">Notwendig</div><div style="font-size:.7rem;color:var(--slate)">Technisch erforderlich</div></div>
           <input type="checkbox" class="ctoggle" checked disabled>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem;background:var(--bg-sub);border-radius:8px;gap:1rem">
-          <div><div style="font-size:.78rem;font-weight:600;color:var(--text)">Komfort</div><div style="font-size:.7rem;color:var(--muted)">Google Fonts</div></div>
-          <input type="checkbox" id="toggle-komfort" class="ctoggle">
+          <div><div style="font-size:.78rem;font-weight:600;color:var(--text)">Komfort</div><div style="font-size:.7rem;color:var(--slate)">Google Fonts</div></div>
+          <input type="checkbox" id="ck-komfort" class="ctoggle">
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem;background:var(--bg-sub);border-radius:8px;gap:1rem">
-          <div><div style="font-size:.78rem;font-weight:600;color:var(--text)">Statistiken</div><div style="font-size:.7rem;color:var(--muted)">Google Analytics</div></div>
-          <input type="checkbox" id="toggle-statistiken" class="ctoggle">
+          <div><div style="font-size:.78rem;font-weight:600;color:var(--text)">Statistiken</div><div style="font-size:.7rem;color:var(--slate)">Google Analytics</div></div>
+          <input type="checkbox" id="ck-stats" class="ctoggle">
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem;background:var(--bg-sub);border-radius:8px;gap:1rem">
-          <div><div style="font-size:.78rem;font-weight:600;color:var(--text)">Marketing</div><div style="font-size:.7rem;color:var(--muted)">Meta Pixel</div></div>
-          <input type="checkbox" id="toggle-marketing" class="ctoggle">
+          <div><div style="font-size:.78rem;font-weight:600;color:var(--text)">Marketing</div><div style="font-size:.7rem;color:var(--slate)">Meta Pixel</div></div>
+          <input type="checkbox" id="ck-mkt" class="ctoggle">
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:.5rem">
-        <button id="cookie-save-selection" style="padding:.625rem 1rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-weight:600;font-size:.85rem;cursor:pointer;font-family:inherit">Auswahl speichern</button>
-        <button id="cookie-back" style="padding:.4rem;color:var(--muted);font-size:.78rem;cursor:pointer;border:none;background:none;font-family:inherit">Zurück</button>
+        <button id="ck-save" class="btn-primary" style="width:100%;justify-content:center">Auswahl speichern</button>
+        <button id="ck-back" style="padding:.4rem;color:var(--slate);font-size:.78rem;cursor:pointer;border:none;background:none;font-family:inherit">Zurück</button>
       </div>
     </div>
-
-    <p style="text-align:center;font-size:.7rem;color:var(--muted);margin-top:1rem">
-      <a href="datenschutz.html" style="color:var(--accent)">Datenschutz</a> · <a href="impressum.html" style="color:var(--accent)">Impressum</a>
+    <p style="text-align:center;font-size:.68rem;color:var(--slate);margin-top:1rem">
+      <a href="datenschutz.html" style="color:var(--blue)">Datenschutz</a> · <a href="impressum.html" style="color:var(--blue)">Impressum</a>
     </p>
   </div>
 </div>
 
-<!-- ===== NAVBAR ===== -->
-<nav id="main-nav" class="fixed top-0 left-0 right-0 z-50" style="padding:.875rem 1.5rem" role="navigation" aria-label="Hauptnavigation">
-  <div style="max-width:68rem;margin:0 auto;display:flex;align-items:center;justify-content:space-between">
-    <a href="#" aria-label="awedi – Startseite" style="display:flex;align-items:center;gap:.5rem;text-decoration:none">
-      <div style="width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center" aria-hidden="true">
-        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1L13 7L7 13L1 7L7 1Z" fill="white"/></svg>
+<!-- ═══════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════════ -->
+<nav id="nav" style="padding:.875rem 1.5rem" role="navigation" aria-label="Hauptnavigation">
+  <div style="max-width:72rem;margin:0 auto;display:flex;align-items:center;justify-content:space-between">
+
+    <!-- Logo -->
+    <a href="#" aria-label="awedi – Startseite" style="display:flex;align-items:center;gap:.625rem;text-decoration:none">
+      <div style="width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--cyan));border-radius:8px;display:flex;align-items:center;justify-content:center" aria-hidden="true">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="3" r="2" fill="white"/><circle cx="2" cy="11" r="2" fill="white"/><circle cx="12" cy="11" r="2" fill="white"/><line x1="7" y1="5" x2="2" y2="9" stroke="white" stroke-width="1.2"/><line x1="7" y1="5" x2="12" y2="9" stroke="white" stroke-width="1.2"/></svg>
       </div>
-      <span style="font-weight:700;font-size:.95rem;color:var(--text);letter-spacing:-.02em">awedi</span>
+      <span style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.05rem;color:var(--text);letter-spacing:-.03em">awedi</span>
     </a>
 
-    <div class="hidden md:flex" style="gap:2rem">
-      <a href="#leistungen" style="font-size:.85rem;font-weight:500;color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Leistungen</a>
-      <a href="#ueber-mich" style="font-size:.85rem;font-weight:500;color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Über mich</a>
-      <a href="#kontakt" style="font-size:.85rem;font-weight:500;color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Kontakt</a>
+    <!-- Desktop nav -->
+    <div style="display:none;gap:2rem" id="nav-links" class="md-flex">
+      <a href="#leistungen" class="nav-link" data-de="Leistungen" data-en="Services" style="font-size:.84rem;font-weight:500;color:var(--slate);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--slate)'">Leistungen</a>
+      <a href="#prozess" class="nav-link" data-de="Wie es läuft" data-en="How it works" style="font-size:.84rem;font-weight:500;color:var(--slate);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--slate)'">Wie es läuft</a>
+      <a href="#ueber" class="nav-link" data-de="Über uns" data-en="About" style="font-size:.84rem;font-weight:500;color:var(--slate);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--slate)'">Über uns</a>
+      <a href="#kontakt" class="nav-link" data-de="Kontakt" data-en="Contact" style="font-size:.84rem;font-weight:500;color:var(--slate);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--slate)'">Kontakt</a>
     </div>
 
-    <div style="display:flex;align-items:center;gap:.625rem">
-      <button id="theme-toggle" aria-label="Farbschema wechseln" style="width:34px;height:34px;border-radius:7px;border:1px solid var(--border);background:var(--bg-sub);cursor:pointer;display:flex;align-items:center;justify-content:center">
-        <svg id="icon-sun" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--text)"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-        <svg id="icon-moon" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--text);display:none"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+    <!-- Controls -->
+    <div style="display:flex;align-items:center;gap:.5rem">
+      <!-- Lang toggle -->
+      <div style="display:flex;gap:.25rem;padding:.2rem;background:var(--bg-sub);border:1px solid var(--border);border-radius:7px">
+        <button class="lang-btn active" id="btn-de" onclick="setLang('de')">DE</button>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+      </div>
+      <!-- Theme -->
+      <button id="theme-btn" aria-label="Farbschema wechseln" style="width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--bg-sub);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s">
+        <svg id="ico-sun" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--text)"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg id="ico-moon" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--text);display:none"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
       </button>
-      <a href="#kontakt" class="hidden md:inline-flex" style="padding:.5rem 1rem;background:var(--accent);color:#fff;border-radius:7px;font-size:.85rem;font-weight:600;text-decoration:none">Anfrage stellen</a>
-      <button id="menu-btn" class="md:hidden" aria-label="Menü öffnen" aria-expanded="false" style="width:34px;height:34px;border-radius:7px;border:1px solid var(--border);background:var(--bg-sub);cursor:pointer;display:flex;align-items:center;justify-content:center">
-        <svg id="menu-bars" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--text)"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        <svg id="menu-x" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--text);display:none"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      <!-- CTA desktop -->
+      <a href="#kontakt" class="btn-primary md-show" style="display:none" data-de="Kostenlos anfragen" data-en="Get in touch">Kostenlos anfragen</a>
+      <!-- Hamburger -->
+      <button id="menu-btn" class="md-hide" aria-label="Menü" aria-expanded="false" style="width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--bg-sub);cursor:pointer;display:flex;align-items:center;justify-content:center">
+        <svg id="ico-bars" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--text)"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg id="ico-x" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--text);display:none"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
   </div>
 
+  <!-- Mobile menu -->
   <div id="mobile-menu">
-    <div style="max-width:68rem;margin:0 auto;padding:1rem 0;border-top:1px solid var(--border);margin-top:.875rem;display:flex;flex-direction:column;gap:.125rem">
-      <a href="#leistungen" style="padding:.625rem 0;font-size:.9rem;font-weight:500;color:var(--text);text-decoration:none">Leistungen</a>
-      <a href="#ueber-mich" style="padding:.625rem 0;font-size:.9rem;font-weight:500;color:var(--text);text-decoration:none">Über mich</a>
-      <a href="#kontakt" style="padding:.625rem 0;font-size:.9rem;font-weight:500;color:var(--text);text-decoration:none">Kontakt</a>
-      <a href="#kontakt" style="margin-top:.5rem;padding:.75rem;background:var(--accent);color:#fff;border-radius:8px;font-weight:600;text-align:center;text-decoration:none">Anfrage stellen</a>
+    <div style="max-width:72rem;margin:0 auto;padding:1.25rem 0;border-top:1px solid var(--border);margin-top:.875rem;display:flex;flex-direction:column;gap:.125rem">
+      <a href="#leistungen" class="mob-link" data-de="Leistungen" data-en="Services" style="padding:.625rem 0;font-size:.9rem;font-weight:500;color:var(--text);text-decoration:none">Leistungen</a>
+      <a href="#prozess" class="mob-link" data-de="Wie es läuft" data-en="How it works" style="padding:.625rem 0;font-size:.9rem;font-weight:500;color:var(--text);text-decoration:none">Wie es läuft</a>
+      <a href="#ueber" class="mob-link" data-de="Über uns" data-en="About" style="padding:.625rem 0;font-size:.9rem;font-weight:500;color:var(--text);text-decoration:none">Über uns</a>
+      <a href="#kontakt" class="mob-link" data-de="Kontakt" data-en="Contact" style="padding:.625rem 0;font-size:.9rem;font-weight:500;color:var(--text);text-decoration:none">Kontakt</a>
+      <a href="#kontakt" class="btn-primary" style="margin-top:.5rem;justify-content:center" data-de="Kostenlos anfragen" data-en="Get in touch">Kostenlos anfragen</a>
     </div>
   </div>
 </nav>
 
-<!-- ===== HERO ===== -->
-<section id="main-content" style="min-height:100vh;display:flex;align-items:center;padding:8rem 1.5rem 5rem;position:relative;overflow:hidden" aria-labelledby="hero-heading">
-  <div class="grid-bg" style="position:absolute;inset:0;opacity:.5" aria-hidden="true"></div>
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,color-mix(in srgb,var(--accent) 8%,transparent),transparent)" aria-hidden="true"></div>
+<!-- ═══════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section id="main" class="hero-bg" style="min-height:100vh;display:flex;align-items:center;padding:8rem 1.5rem 5rem;position:relative;overflow:hidden" aria-labelledby="hero-h1">
 
-  <div style="max-width:68rem;margin:0 auto;width:100%;position:relative;z-index:1">
-    <div class="fade-up" style="margin-bottom:1.5rem">
-      <span style="display:inline-flex;align-items:center;gap:.5rem;padding:.3rem .875rem;border:1px solid var(--border);border-radius:999px;font-size:.73rem;font-weight:600;color:var(--muted);background:var(--bg-sub)">
-        <span class="pulse-dot" style="width:6px;height:6px;border-radius:50%;background:var(--accent)" aria-hidden="true"></span>
-        Verfügbar für neue Projekte
+  <!-- Grid pattern bg -->
+  <div class="grid-pat" style="position:absolute;inset:0;opacity:.4" aria-hidden="true"></div>
+
+  <!-- Network SVG decoration -->
+  <svg id="network-svg" style="position:absolute;right:-60px;top:50%;transform:translateY(-50%);width:580px;height:580px;pointer-events:none" aria-hidden="true" viewBox="0 0 580 580">
+    <defs>
+      <radialGradient id="ng" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#2563EB" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#2563EB" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <!-- Nodes -->
+    <circle cx="290" cy="140" r="7" fill="#2563EB"/>
+    <circle cx="460" cy="240" r="5" fill="#0EA5E9"/>
+    <circle cx="420" cy="400" r="6" fill="#2563EB"/>
+    <circle cx="200" cy="420" r="5" fill="#0EA5E9"/>
+    <circle cx="120" cy="260" r="7" fill="#2563EB"/>
+    <circle cx="200" cy="150" r="4" fill="#0EA5E9"/>
+    <circle cx="370" cy="290" r="10" fill="#1D4ED8"/>
+    <circle cx="170" cy="330" r="4" fill="#0EA5E9"/>
+    <circle cx="490" cy="360" r="4" fill="#0EA5E9"/>
+    <circle cx="310" cy="470" r="5" fill="#2563EB"/>
+    <!-- Lines -->
+    <line x1="290" y1="140" x2="460" y2="240" stroke="#2563EB" stroke-width="1" opacity=".5"/>
+    <line x1="290" y1="140" x2="200" y2="150" stroke="#2563EB" stroke-width="1" opacity=".4"/>
+    <line x1="290" y1="140" x2="370" y2="290" stroke="#2563EB" stroke-width="1.5" opacity=".6"/>
+    <line x1="460" y1="240" x2="370" y2="290" stroke="#0EA5E9" stroke-width="1" opacity=".5"/>
+    <line x1="460" y1="240" x2="490" y2="360" stroke="#0EA5E9" stroke-width="1" opacity=".4"/>
+    <line x1="420" y1="400" x2="370" y2="290" stroke="#2563EB" stroke-width="1" opacity=".5"/>
+    <line x1="420" y1="400" x2="310" y2="470" stroke="#2563EB" stroke-width="1" opacity=".4"/>
+    <line x1="200" y1="420" x2="170" y2="330" stroke="#0EA5E9" stroke-width="1" opacity=".4"/>
+    <line x1="200" y1="420" x2="310" y2="470" stroke="#0EA5E9" stroke-width="1" opacity=".4"/>
+    <line x1="120" y1="260" x2="170" y2="330" stroke="#2563EB" stroke-width="1" opacity=".5"/>
+    <line x1="120" y1="260" x2="200" y2="150" stroke="#2563EB" stroke-width="1" opacity=".4"/>
+    <line x1="370" y1="290" x2="170" y2="330" stroke="#1D4ED8" stroke-width="1.5" opacity=".5"/>
+    <line x1="490" y1="360" x2="420" y2="400" stroke="#0EA5E9" stroke-width="1" opacity=".4"/>
+    <!-- Outer ring -->
+    <circle cx="290" cy="290" r="200" fill="none" stroke="#2563EB" stroke-width=".5" opacity=".3"/>
+    <circle cx="290" cy="290" r="260" fill="none" stroke="#0EA5E9" stroke-width=".5" opacity=".15"/>
+  </svg>
+
+  <div style="max-width:72rem;margin:0 auto;width:100%;position:relative;z-index:1">
+
+    <!-- Badge -->
+    <div class="fade" style="margin-bottom:1.5rem">
+      <span class="pill">
+        <span class="pulse" style="width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0" aria-hidden="true"></span>
+        <span data-de="Ihr regionaler IT-Partner" data-en="Your regional IT partner">Ihr regionaler IT-Partner</span>
       </span>
     </div>
 
-    <h1 id="hero-heading" class="fade-up" style="font-size:clamp(3rem,9vw,7.5rem);font-weight:800;line-height:1;letter-spacing:-.04em;color:var(--text);margin:0 0 1.75rem;animation-delay:.08s">
-      Design &amp;<br>Technik<br><span class="accent-text">aus einer Hand.</span>
+    <!-- Headline -->
+    <h1 id="hero-h1" class="fade" style="font-size:clamp(2.8rem,8vw,6.5rem);font-weight:900;line-height:1.02;color:var(--text);margin:0 0 1.5rem;max-width:720px;animation-delay:.07s">
+      <span data-de="Technik die" data-en="Technology">Technik die</span><br>
+      <span data-de="einfach" data-en="that simply">einfach</span>
+      <span class="grad" data-de=" funktioniert." data-en=" works."> funktioniert.</span>
     </h1>
 
-    <p class="fade-up" style="font-size:1.1rem;color:var(--muted);max-width:440px;line-height:1.75;margin:0 0 2.5rem;animation-delay:.16s">
-      Ich helfe Unternehmen mit professionellem Logo-Design, modernen Webseiten und zuverlässigem Technik-Support.
+    <!-- Subheadline -->
+    <p class="fade" style="font-size:1.1rem;color:var(--slate);max-width:480px;line-height:1.75;margin:0 0 2.5rem;animation-delay:.14s">
+      <span data-de="Wir kümmern uns um Ihr Netzwerk, automatisieren Ihre Prozesse und vermitteln zuverlässige Handwerker – damit Sie sich auf Ihr Kerngeschäft konzentrieren können." data-en="We take care of your network, automate your processes and connect you with reliable tradespeople — so you can focus on what matters.">Wir kümmern uns um Ihr Netzwerk, automatisieren Ihre Prozesse und vermitteln zuverlässige Handwerker – damit Sie sich auf Ihr Kerngeschäft konzentrieren können.</span>
     </p>
 
-    <div class="fade-up" style="display:flex;flex-wrap:wrap;gap:.75rem;animation-delay:.24s">
-      <a href="#kontakt" style="display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;background:var(--accent);color:#fff;border-radius:8px;font-weight:600;font-size:.9rem;text-decoration:none">
-        Projekt starten
+    <!-- CTAs -->
+    <div class="fade" style="display:flex;flex-wrap:wrap;gap:.75rem;animation-delay:.21s">
+      <a href="#kontakt" class="btn-primary">
+        <span data-de="Jetzt kostenlos anfragen" data-en="Get free consultation">Jetzt kostenlos anfragen</span>
         <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
       </a>
-      <a href="#leistungen" style="display:inline-flex;align-items:center;padding:.75rem 1.5rem;background:transparent;color:var(--text);border:1px solid var(--border);border-radius:8px;font-weight:500;font-size:.9rem;text-decoration:none">
-        Leistungen ansehen
+      <a href="#leistungen" class="btn-secondary">
+        <span data-de="Leistungen entdecken" data-en="Explore services">Leistungen entdecken</span>
       </a>
     </div>
 
-    <div class="fade-up" style="display:flex;flex-wrap:wrap;gap:3rem;margin-top:5rem;padding-top:3rem;border-top:1px solid var(--border);animation-delay:.32s" role="list" aria-label="Kennzahlen">
-      <div role="listitem"><div style="font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--text)">100+</div><div style="font-size:.78rem;color:var(--muted);margin-top:.2rem;font-weight:500">Projekte</div></div>
-      <div role="listitem"><div style="font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--text)">50+</div><div style="font-size:.78rem;color:var(--muted);margin-top:.2rem;font-weight:500">Kunden</div></div>
-      <div role="listitem"><div style="font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--text)">24h</div><div style="font-size:.78rem;color:var(--muted);margin-top:.2rem;font-weight:500">Reaktionszeit</div></div>
-      <div role="listitem"><div style="font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--text)">5★</div><div style="font-size:.78rem;color:var(--muted);margin-top:.2rem;font-weight:500">Bewertung</div></div>
+    <!-- Stats -->
+    <div class="fade" style="display:flex;flex-wrap:wrap;gap:2.5rem;margin-top:4.5rem;padding-top:3rem;border-top:1px solid var(--border);animation-delay:.28s">
+      <div>
+        <div class="stat-num" style="font-family:'Outfit',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--text)">50+</div>
+        <div style="font-size:.75rem;color:var(--slate);margin-top:.15rem;font-weight:500" data-de="betreute Unternehmen" data-en="businesses served">betreute Unternehmen</div>
+      </div>
+      <div>
+        <div class="stat-num" style="font-family:'Outfit',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--text);animation-delay:.1s">24h</div>
+        <div style="font-size:.75rem;color:var(--slate);margin-top:.15rem;font-weight:500" data-de="maximale Reaktionszeit" data-en="max. response time">maximale Reaktionszeit</div>
+      </div>
+      <div>
+        <div class="stat-num" style="font-family:'Outfit',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--text);animation-delay:.2s">100+</div>
+        <div style="font-size:.75rem;color:var(--slate);margin-top:.15rem;font-weight:500" data-de="abgeschlossene Projekte" data-en="completed projects">abgeschlossene Projekte</div>
+      </div>
+      <div>
+        <div class="stat-num" style="font-family:'Outfit',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--text);animation-delay:.3s">5★</div>
+        <div style="font-size:.75rem;color:var(--slate);margin-top:.15rem;font-weight:500" data-de="Kundenbewertung" data-en="customer rating">Kundenbewertung</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     LEISTUNGEN
+════════════════════════════════════════════ -->
+<section id="leistungen" style="padding:6rem 1.5rem;border-top:1px solid var(--border)" aria-labelledby="sv-h2">
+  <div style="max-width:72rem;margin:0 auto">
+
+    <div class="fade" style="margin-bottom:3.5rem">
+      <span class="section-label" data-de="Leistungen" data-en="Services">Leistungen</span>
+      <h2 id="sv-h2" style="font-size:clamp(1.9rem,4vw,3rem);font-weight:800;color:var(--text);margin:.4rem 0 .875rem;line-height:1.15">
+        <span data-de="Was wir für Sie tun" data-en="What we do for you">Was wir für Sie tun</span>
+      </h2>
+      <p style="font-size:.95rem;color:var(--slate);max-width:520px;line-height:1.75">
+        <span data-de="Drei Kernbereiche – ein Ansprechpartner. Kein Ticketsystem, kein Weitervermitteln." data-en="Three core areas – one contact person. No ticket system, no bouncing around.">Drei Kernbereiche – ein Ansprechpartner. Kein Ticketsystem, kein Weitervermitteln.</span>
+      </p>
+    </div>
+
+    <div style="display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+
+      <!-- Card 1: IT & Netzwerk -->
+      <div class="scard fade">
+        <div style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.25rem">
+          <div class="icon-box">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" style="color:var(--blue)"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12H3m2 0a9 9 0 1018 0M5 12a9 9 0 0118 0M12 3v2m0 14v2M7.05 7.05l1.41 1.41m7.07 7.07l1.41 1.41M3 12h2m14 0h2M7.05 16.95l1.41-1.41m7.07-7.07l1.41-1.41"/></svg>
+          </div>
+          <span class="tag" data-de="IT-Infrastruktur" data-en="IT Infrastructure">IT-Infrastruktur</span>
+        </div>
+        <h3 style="font-size:1.25rem;font-weight:700;color:var(--text);margin:0 0 .625rem;line-height:1.3">
+          <span data-de="Ihr Netzwerk läuft – oder wir sind schon dabei." data-en="Your network runs – or we're already on it.">Ihr Netzwerk läuft – oder wir sind schon dabei.</span>
+        </h3>
+        <p style="font-size:.85rem;color:var(--slate);line-height:1.75;margin:0 0 1.25rem">
+          <span data-de="Stabile Firmennetzwerke, sichere Server, schneller WLAN-Ausbau. Sie merken es nur wenn alles reibungslos funktioniert." data-en="Stable corporate networks, secure servers, fast WiFi expansion. You only notice it when everything runs smoothly.">Stabile Firmennetzwerke, sichere Server, schneller WLAN-Ausbau. Sie merken es nur wenn alles reibungslos funktioniert.</span>
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:.375rem">
+          <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--slate);font-weight:500" data-de="Netzwerk-Setup" data-en="Network Setup">Netzwerk-Setup</span>
+          <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--slate);font-weight:500" data-de="Server & Cloud" data-en="Server & Cloud">Server & Cloud</span>
+          <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--slate);font-weight:500" data-de="IT-Support" data-en="IT Support">IT-Support</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Digitalisierung -->
+      <div class="scard fade" style="animation-delay:.08s">
+        <div style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.25rem">
+          <div class="icon-box">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" style="color:var(--blue)"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <span class="tag" data-de="Digitalisierung" data-en="Digitalization">Digitalisierung</span>
+        </div>
+        <h3 style="font-size:1.25rem;font-weight:700;color:var(--text);margin:0 0 .625rem;line-height:1.3">
+          <span data-de="Weniger Aufwand. Mehr Zeit für das Wesentliche." data-en="Less effort. More time for what matters.">Weniger Aufwand. Mehr Zeit für das Wesentliche.</span>
+        </h3>
+        <p style="font-size:.85rem;color:var(--slate);line-height:1.75;margin:0 0 1.25rem">
+          <span data-de="Wir automatisieren wiederkehrende Aufgaben mit modernen Tools wie N8N. Was heute 2 Stunden braucht, erledigt sich morgen von selbst." data-en="We automate repetitive tasks with modern tools like N8N. What takes 2 hours today will handle itself tomorrow.">Wir automatisieren wiederkehrende Aufgaben mit modernen Tools wie N8N. Was heute 2 Stunden braucht, erledigt sich morgen von selbst.</span>
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:.375rem">
+          <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--slate);font-weight:500">N8N Automatisierung</span>
+          <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--slate);font-weight:500" data-de="Prozessoptimierung" data-en="Process optimization">Prozessoptimierung</span>
+          <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--slate);font-weight:500" data-de="API-Anbindung" data-en="API integration">API-Anbindung</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Handwerk -->
+      <div class="scard fade" style="animation-delay:.16s">
+        <div style="display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.25rem">
+          <div class="icon-box">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" style="color:var(--blue)"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <span class="tag" data-de="Handwerksvermittlung" data-en="Trade Network">Handwerksvermittlung</span>
+        </div>
+        <h3 style="font-size:1.25rem;font-weight:700;color:var(--text);margin:0 0 .625rem;line-height:1.3">
+          <span data-de="Den richtigen Handwerker – sofort und zuverlässig." data-en="The right tradesperson – fast and reliable.">Den richtigen Handwerker – sofort und zuverlässig.</span>
+        </h3>
+        <p style="font-size:.85rem;color:var(--slate);line-height:1.75;margin:0 0 1.25rem">
+          <span data-de="Durch unser regionales Netzwerk finden wir schnell den passenden Betrieb für Ihre Anforderungen. Geprüft, verlässlich, aus der Region." data-en="Through our regional network we quickly find the right business for your needs. Vetted, reliable, local.">Durch unser regionales Netzwerk finden wir schnell den passenden Betrieb für Ihre Anforderungen. Geprüft, verlässlich, aus der Region.</span>
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:.375rem">
+          <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--slate);font-weight:500" data-de="Regionales Netzwerk" data-en="Regional network">Regionales Netzwerk</span>
+          <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--slate);font-weight:500" data-de="Geprüfte Partner" data-en="Vetted partners">Geprüfte Partner</span>
+          <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--slate);font-weight:500" data-de="Schnelle Vermittlung" data-en="Fast placement">Schnelle Vermittlung</span>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- ===== LEISTUNGEN ===== -->
-<section id="leistungen" style="padding:6rem 1.5rem;border-top:1px solid var(--border)" aria-labelledby="services-heading">
-  <div style="max-width:68rem;margin:0 auto">
-    <div class="fade-up" style="margin-bottom:3.5rem">
-      <span style="font-size:.72rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em">Leistungen</span>
-      <h2 id="services-heading" style="font-size:clamp(2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.03em;color:var(--text);margin:.375rem 0 0">Was ich anbiete</h2>
+<!-- ═══════════════════════════════════════════
+     PROZESS
+════════════════════════════════════════════ -->
+<section id="prozess" style="padding:6rem 1.5rem;border-top:1px solid var(--border);background:var(--bg-sub)" aria-labelledby="pr-h2">
+  <div style="max-width:72rem;margin:0 auto">
+
+    <div class="fade" style="margin-bottom:4rem;text-align:center">
+      <span class="section-label" data-de="So einfach geht's" data-en="Simple process">So einfach geht's</span>
+      <h2 id="pr-h2" style="font-size:clamp(1.9rem,4vw,3rem);font-weight:800;color:var(--text);margin:.4rem 0 .875rem">
+        <span data-de="In 3 Schritten zur Lösung" data-en="3 steps to your solution">In 3 Schritten zur Lösung</span>
+      </h2>
+      <p style="font-size:.95rem;color:var(--slate);max-width:400px;margin:0 auto;line-height:1.7">
+        <span data-de="Kein komplizierter Prozess. Direkter Kontakt, schnelle Umsetzung." data-en="No complicated process. Direct contact, fast implementation.">Kein komplizierter Prozess. Direkter Kontakt, schnelle Umsetzung.</span>
+      </p>
     </div>
 
-    <div>
-      <div class="service-row fade-up" style="display:grid;grid-template-columns:2.5rem 1fr auto;gap:1.5rem;align-items:start;padding:1.75rem 0">
-        <span style="font-size:.72rem;font-weight:600;color:var(--muted);padding-top:.25rem;font-variant-numeric:tabular-nums">01</span>
-        <div>
-          <h3 style="font-size:1.2rem;font-weight:700;color:var(--text);margin:0 0 .375rem;letter-spacing:-.02em">Logo Design</h3>
-          <p style="font-size:.85rem;color:var(--muted);line-height:1.7;margin:0 0 .875rem;max-width:480px">Einzigartiges Corporate-Logo – von der ersten Skizze bis zu fertigen Vektoren in allen Formaten. Ihr Markenzeichen, das bleibt.</p>
-          <div style="display:flex;flex-wrap:wrap;gap:.375rem">
-            <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-weight:500">SVG / PNG / PDF</span>
-            <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-weight:500">Vektorformat</span>
-            <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-weight:500">Revisionen inklusive</span>
-          </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;position:relative">
+
+      <div class="fade pstep">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;box-shadow:0 8px 24px -4px rgba(29,78,216,.35)">
+          <span style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:#fff">1</span>
         </div>
-        <div style="width:38px;height:38px;border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true">
-          <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="color:var(--accent)"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
-        </div>
+        <h3 style="font-size:1rem;font-weight:700;color:var(--text);margin:0 0 .5rem" data-de="Kontakt aufnehmen" data-en="Get in touch">Kontakt aufnehmen</h3>
+        <p style="font-size:.83rem;color:var(--slate);line-height:1.7">
+          <span data-de="Kurze Nachricht oder Anruf genügt. Kein Formular-Chaos." data-en="A short message or call is enough. No form chaos.">Kurze Nachricht oder Anruf genügt. Kein Formular-Chaos.</span>
+        </p>
       </div>
 
-      <div class="service-row fade-up" style="display:grid;grid-template-columns:2.5rem 1fr auto;gap:1.5rem;align-items:start;padding:1.75rem 0">
-        <span style="font-size:.72rem;font-weight:600;color:var(--muted);padding-top:.25rem">02</span>
-        <div>
-          <h3 style="font-size:1.2rem;font-weight:700;color:var(--text);margin:0 0 .375rem;letter-spacing:-.02em">Webseiten</h3>
-          <p style="font-size:.85rem;color:var(--muted);line-height:1.7;margin:0 0 .875rem;max-width:480px">Moderne, schnelle Webseiten die ranken und konvertieren. Von der simplen Landingpage bis zur komplexen Business-Website.</p>
-          <div style="display:flex;flex-wrap:wrap;gap:.375rem">
-            <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-weight:500">Responsive</span>
-            <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-weight:500">SEO-optimiert</span>
-            <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-weight:500">DSGVO-konform</span>
-          </div>
+      <div class="fade pstep" style="animation-delay:.1s">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;box-shadow:0 8px 24px -4px rgba(29,78,216,.35)">
+          <span style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:#fff">2</span>
         </div>
-        <div style="width:38px;height:38px;border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true">
-          <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="color:var(--accent)"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-        </div>
+        <h3 style="font-size:1rem;font-weight:700;color:var(--text);margin:0 0 .5rem" data-de="Kostenlose Beratung" data-en="Free consultation">Kostenlose Beratung</h3>
+        <p style="font-size:.83rem;color:var(--slate);line-height:1.7">
+          <span data-de="Wir analysieren Ihre Situation und zeigen Ihnen die beste Lösung – persönlich und unverbindlich." data-en="We analyse your situation and show you the best solution – personal and non-binding.">Wir analysieren Ihre Situation und zeigen Ihnen die beste Lösung – persönlich und unverbindlich.</span>
+        </p>
       </div>
 
-      <div class="service-row fade-up" style="display:grid;grid-template-columns:2.5rem 1fr auto;gap:1.5rem;align-items:start;padding:1.75rem 0">
-        <span style="font-size:.72rem;font-weight:600;color:var(--muted);padding-top:.25rem">03</span>
-        <div>
-          <h3 style="font-size:1.2rem;font-weight:700;color:var(--text);margin:0 0 .375rem;letter-spacing:-.02em">Branding & CI</h3>
-          <p style="font-size:.85rem;color:var(--muted);line-height:1.7;margin:0 0 .875rem;max-width:480px">Ganzheitliches Corporate Design – Farbpalette, Typografie, Visitenkarten, Briefpapier. Ein konsistentes Markenbild für alle Kanäle.</p>
-          <div style="display:flex;flex-wrap:wrap;gap:.375rem">
-            <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-weight:500">Styleguide</span>
-            <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-weight:500">Drucksachen</span>
-            <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-weight:500">CI/CD</span>
-          </div>
+      <div class="fade pstep" style="animation-delay:.2s">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;box-shadow:0 8px 24px -4px rgba(29,78,216,.35)">
+          <span style="font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;color:#fff">3</span>
         </div>
-        <div style="width:38px;height:38px;border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true">
-          <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="color:var(--accent)"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-        </div>
+        <h3 style="font-size:1rem;font-weight:700;color:var(--text);margin:0 0 .5rem" data-de="Umsetzung & Support" data-en="Implementation & Support">Umsetzung & Support</h3>
+        <p style="font-size:.83rem;color:var(--slate);line-height:1.7">
+          <span data-de="Wir setzen um und bleiben an Ihrer Seite. Direkte Erreichbarkeit, keine anonymen Hotlines." data-en="We implement and stay by your side. Direct availability, no anonymous hotlines.">Wir setzen um und bleiben an Ihrer Seite. Direkte Erreichbarkeit, keine anonymen Hotlines.</span>
+        </p>
       </div>
 
-      <div class="service-row fade-up" style="display:grid;grid-template-columns:2.5rem 1fr auto;gap:1.5rem;align-items:start;padding:1.75rem 0">
-        <span style="font-size:.72rem;font-weight:600;color:var(--muted);padding-top:.25rem">04</span>
-        <div>
-          <h3 style="font-size:1.2rem;font-weight:700;color:var(--text);margin:0 0 .375rem;letter-spacing:-.02em">Social Media Posts</h3>
-          <p style="font-size:.85rem;color:var(--muted);line-height:1.7;margin:0 0 .875rem;max-width:480px">Professionelle Grafiken für Instagram, Facebook und LinkedIn. Konsistent, ansprechend, auf Ihre Zielgruppe zugeschnitten.</p>
-          <div style="display:flex;flex-wrap:wrap;gap:.375rem">
-            <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-weight:500">Instagram</span>
-            <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-weight:500">Facebook</span>
-            <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-weight:500">LinkedIn</span>
-          </div>
-        </div>
-        <div style="width:38px;height:38px;border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true">
-          <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="color:var(--accent)"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
-        </div>
-      </div>
-
-      <div class="service-row fade-up" style="display:grid;grid-template-columns:2.5rem 1fr auto;gap:1.5rem;align-items:start;padding:1.75rem 0">
-        <span style="font-size:.72rem;font-weight:600;color:var(--muted);padding-top:.25rem">05</span>
-        <div>
-          <h3 style="font-size:1.2rem;font-weight:700;color:var(--text);margin:0 0 .375rem;letter-spacing:-.02em">Technik-Support</h3>
-          <p style="font-size:.85rem;color:var(--muted);line-height:1.7;margin:0 0 .875rem;max-width:480px">Hardware, Software, Netzwerk – technische Probleme schnell und zuverlässig gelöst. Remote oder vor Ort, damit Ihr Betrieb läuft.</p>
-          <div style="display:flex;flex-wrap:wrap;gap:.375rem">
-            <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-weight:500">Remote</span>
-            <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-weight:500">Vor Ort</span>
-            <span style="font-size:.68rem;padding:.2rem .6rem;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-weight:500">24h Reaktion</span>
-          </div>
-        </div>
-        <div style="width:38px;height:38px;border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true">
-          <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="color:var(--accent)"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-        </div>
-      </div>
     </div>
   </div>
 </section>
 
-<!-- ===== ÜBER MICH ===== -->
-<section id="ueber-mich" style="padding:6rem 1.5rem;border-top:1px solid var(--border);background:var(--bg-sub)" aria-labelledby="about-heading">
-  <div style="max-width:68rem;margin:0 auto">
-    <div class="two-col">
-      <div class="fade-up">
-        <span style="font-size:.72rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em">Über mich</span>
-        <h2 id="about-heading" style="font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-.03em;color:var(--text);margin:.375rem 0 1.25rem;line-height:1.15">Ihr Ansprechpartner<br>für digitale Lösungen.</h2>
-        <p style="font-size:.9rem;color:var(--muted);line-height:1.8;margin:0 0 .875rem">Als Freelancer biete ich eine seltene Kombination: kreatives Design-Know-how und technische Kompetenz – aus einer Hand, ohne Umwege über Agenturen.</p>
-        <p style="font-size:.9rem;color:var(--muted);line-height:1.8;margin:0 0 2rem">Von der ersten Idee bis zum fertigen Produkt begleite ich Sie persönlich. Kein Ticket-System, kein anonymes Team – nur direkter Kontakt und verlässliche Arbeit.</p>
-        <ul style="display:flex;flex-direction:column;gap:.625rem;list-style:none;padding:0;margin:0" aria-label="Vorteile">
-          <li style="display:flex;align-items:center;gap:.75rem;font-size:.875rem;color:var(--text)">
-            <div style="width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--accent) 15%,transparent);display:flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true"><svg width="9" height="9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" style="color:var(--accent)"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
-            Persönliche Betreuung – kein Ticket-System
-          </li>
-          <li style="display:flex;align-items:center;gap:.75rem;font-size:.875rem;color:var(--text)">
-            <div style="width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--accent) 15%,transparent);display:flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true"><svg width="9" height="9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" style="color:var(--accent)"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
-            Faire Preise ohne Agentur-Aufschlag
-          </li>
-          <li style="display:flex;align-items:center;gap:.75rem;font-size:.875rem;color:var(--text)">
-            <div style="width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--accent) 15%,transparent);display:flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true"><svg width="9" height="9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" style="color:var(--accent)"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
-            Schnelle Umsetzung, pünktliche Lieferung
-          </li>
-          <li style="display:flex;align-items:center;gap:.75rem;font-size:.875rem;color:var(--text)">
-            <div style="width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--accent) 15%,transparent);display:flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true"><svg width="9" height="9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" style="color:var(--accent)"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
-            Design und Technik aus einer Hand
-          </li>
-        </ul>
+<!-- ═══════════════════════════════════════════
+     ÜBER UNS
+════════════════════════════════════════════ -->
+<section id="ueber" style="padding:6rem 1.5rem;border-top:1px solid var(--border)" aria-labelledby="ab-h2">
+  <div style="max-width:72rem;margin:0 auto">
+    <div style="display:grid;gap:4rem;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:center">
+
+      <!-- Left: Text -->
+      <div class="fade">
+        <span class="section-label" data-de="Über uns" data-en="About us">Über uns</span>
+        <h2 id="ab-h2" style="font-size:clamp(1.9rem,4vw,3rem);font-weight:800;color:var(--text);margin:.4rem 0 1.25rem;line-height:1.15">
+          <span data-de="Regional verwurzelt. Digital aufgestellt." data-en="Locally rooted. Digitally positioned.">Regional verwurzelt.<br>Digital aufgestellt.</span>
+        </h2>
+        <p style="font-size:.9rem;color:var(--slate);line-height:1.8;margin:0 0 .875rem">
+          <span data-de="awedi ist kein anonymes Großunternehmen. Wir sind ein regionaler Dienstleister der Unternehmen und Privatkunden in der Region persönlich betreut." data-en="awedi is not an anonymous large company. We are a regional service provider that personally supports businesses and private customers in the region.">awedi ist kein anonymes Großunternehmen. Wir sind ein regionaler Dienstleister der Unternehmen und Privatkunden in der Region persönlich betreut.</span>
+        </p>
+        <p style="font-size:.9rem;color:var(--slate);line-height:1.8;margin:0 0 2rem">
+          <span data-de="Direkte Kommunikation, schnelle Reaktionszeiten und nachhaltige Lösungen – das sind nicht nur Versprechen, das ist unser Alltag." data-en="Direct communication, fast response times and sustainable solutions – these are not just promises, this is our daily practice.">Direkte Kommunikation, schnelle Reaktionszeiten und nachhaltige Lösungen – das sind nicht nur Versprechen, das ist unser Alltag.</span>
+        </p>
+        <div style="display:flex;flex-direction:column;gap:.75rem">
+          <div class="check-item">
+            <div class="check-dot" aria-hidden="true"><svg width="9" height="9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" style="color:var(--blue)"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+            <span data-de="Persönlicher Ansprechpartner – kein Ticketsystem" data-en="Personal contact – no ticket system">Persönlicher Ansprechpartner – kein Ticketsystem</span>
+          </div>
+          <div class="check-item">
+            <div class="check-dot" aria-hidden="true"><svg width="9" height="9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" style="color:var(--blue)"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+            <span data-de="Reaktion innerhalb von 24 Stunden garantiert" data-en="Response within 24 hours guaranteed">Reaktion innerhalb von 24 Stunden garantiert</span>
+          </div>
+          <div class="check-item">
+            <div class="check-dot" aria-hidden="true"><svg width="9" height="9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" style="color:var(--blue)"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+            <span data-de="IT, Digitalisierung und Handwerk aus einer Hand" data-en="IT, digitalization and trades from one source">IT, Digitalisierung und Handwerk aus einer Hand</span>
+          </div>
+          <div class="check-item">
+            <div class="check-dot" aria-hidden="true"><svg width="9" height="9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" style="color:var(--blue)"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>
+            <span data-de="Faire Preise – transparent und ohne versteckte Kosten" data-en="Fair prices – transparent and no hidden costs">Faire Preise – transparent und ohne versteckte Kosten</span>
+          </div>
+        </div>
       </div>
 
-      <div class="fade-up" style="margin-top:2rem">
-        <div class="stats-grid">
-          <div class="stat-cell"><div style="font-size:2.25rem;font-weight:800;letter-spacing:-.04em;color:var(--text)">100+</div><div style="font-size:.75rem;color:var(--muted);margin-top:.2rem">abgeschlossene Projekte</div></div>
-          <div class="stat-cell"><div style="font-size:2.25rem;font-weight:800;letter-spacing:-.04em;color:var(--text)">50+</div><div style="font-size:.75rem;color:var(--muted);margin-top:.2rem">zufriedene Kunden</div></div>
-          <div class="stat-cell"><div style="font-size:2.25rem;font-weight:800;letter-spacing:-.04em;color:var(--text)">5★</div><div style="font-size:.75rem;color:var(--muted);margin-top:.2rem">Kundenbewertung</div></div>
-          <div class="stat-cell"><div style="font-size:2.25rem;font-weight:800;letter-spacing:-.04em;color:var(--text)">24h</div><div style="font-size:.75rem;color:var(--muted);margin-top:.2rem">maximale Reaktionszeit</div></div>
-          <div class="stat-cell" style="grid-column:span 2;background:color-mix(in srgb,var(--accent) 7%,var(--bg))">
-            <p style="font-size:.82rem;color:var(--text);line-height:1.7;font-style:italic;margin:0 0 .875rem">"Professionell, schnell und immer erreichbar. awedi hat unsere Webseite und unser Logo komplett neu gestaltet – wir sind begeistert."</p>
-            <div style="display:flex;align-items:center;gap:.625rem">
-              <div style="width:30px;height:30px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.72rem;font-weight:700" aria-hidden="true">M</div>
-              <div><div style="font-size:.78rem;font-weight:600;color:var(--text)">Michael B.</div><div style="font-size:.7rem;color:var(--muted)">MB Consulting</div></div>
+      <!-- Right: Stats + Testimonial -->
+      <div class="fade" style="animation-delay:.1s">
+        <!-- Stats grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:1.25rem">
+          <div class="stat-cell">
+            <div style="font-family:'Outfit',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--text)">50+</div>
+            <div style="font-size:.75rem;color:var(--slate);margin-top:.2rem" data-de="Unternehmen betreut" data-en="Businesses served">Unternehmen betreut</div>
+          </div>
+          <div class="stat-cell">
+            <div style="font-family:'Outfit',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--text)">100+</div>
+            <div style="font-size:.75rem;color:var(--slate);margin-top:.2rem" data-de="Projekte abgeschlossen" data-en="Projects completed">Projekte abgeschlossen</div>
+          </div>
+          <div class="stat-cell">
+            <div style="font-family:'Outfit',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--text)">24h</div>
+            <div style="font-size:.75rem;color:var(--slate);margin-top:.2rem" data-de="Reaktionszeit" data-en="Response time">Reaktionszeit</div>
+          </div>
+          <div class="stat-cell">
+            <div style="font-family:'Outfit',sans-serif;font-size:2rem;font-weight:800;letter-spacing:-.04em;color:var(--text)">5★</div>
+            <div style="font-size:.75rem;color:var(--slate);margin-top:.2rem" data-de="Bewertung" data-en="Rating">Bewertung</div>
+          </div>
+        </div>
+
+        <!-- Testimonial -->
+        <div class="testimonial">
+          <div style="display:flex;gap:.25rem;margin-bottom:.875rem">
+            <svg width="14" height="14" fill="#F59E0B" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" fill="#F59E0B" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" fill="#F59E0B" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" fill="#F59E0B" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="14" height="14" fill="#F59E0B" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <p style="font-size:.85rem;color:var(--slate-dark);line-height:1.75;font-style:italic;margin:0 0 1rem">
+            <span data-de="&ldquo;Endlich ein IT-Partner der einfach antwortet wenn man anruft. Netzwerk läuft seit der Umstellung perfekt – kein einziger Ausfall.&rdquo;" data-en="&ldquo;Finally an IT partner who simply answers when you call. Network has run perfectly since the changeover – not a single outage.&rdquo;">&ldquo;Endlich ein IT-Partner der einfach antwortet wenn man anruft. Netzwerk läuft seit der Umstellung perfekt – kein einziger Ausfall.&rdquo;</span>
+          </p>
+          <div style="display:flex;align-items:center;gap:.625rem">
+            <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:700" aria-hidden="true">M</div>
+            <div>
+              <div style="font-size:.78rem;font-weight:600;color:var(--text)">Michael B.</div>
+              <div style="font-size:.7rem;color:var(--slate)">MB Consulting GmbH</div>
             </div>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- ===== KONTAKT ===== -->
-<section id="kontakt" style="padding:6rem 1.5rem;border-top:1px solid var(--border)" aria-labelledby="contact-heading">
-  <div style="max-width:68rem;margin:0 auto">
-    <div class="two-col">
-      <div class="fade-up">
-        <span style="font-size:.72rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em">Kontakt</span>
-        <h2 id="contact-heading" style="font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-.03em;color:var(--text);margin:.375rem 0 .875rem;line-height:1.15">Starten wir<br>Ihr Projekt.</h2>
-        <p style="font-size:.9rem;color:var(--muted);line-height:1.8;margin:0 0 2.5rem">Beschreiben Sie kurz Ihr Projekt – ich melde mich innerhalb von 24 Stunden. Das erste Beratungsgespräch ist kostenlos.</p>
+<!-- ═══════════════════════════════════════════
+     KONTAKT
+════════════════════════════════════════════ -->
+<section id="kontakt" style="padding:6rem 1.5rem;border-top:1px solid var(--border);background:var(--bg-sub)" aria-labelledby="ct-h2">
+  <div style="max-width:72rem;margin:0 auto">
+    <div style="display:grid;gap:4rem;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:start">
+
+      <!-- Left -->
+      <div class="fade">
+        <span class="section-label" data-de="Kontakt" data-en="Contact">Kontakt</span>
+        <h2 id="ct-h2" style="font-size:clamp(1.9rem,4vw,3rem);font-weight:800;color:var(--text);margin:.4rem 0 .875rem;line-height:1.15">
+          <span data-de="Sprechen wir über Ihr Projekt." data-en="Let's talk about your project.">Sprechen wir über Ihr Projekt.</span>
+        </h2>
+        <p style="font-size:.9rem;color:var(--slate);line-height:1.8;margin:0 0 2rem">
+          <span data-de="Beschreiben Sie kurz was Sie brauchen – wir melden uns innerhalb von 24 Stunden. Das erste Gespräch ist kostenlos und unverbindlich." data-en="Briefly describe what you need – we'll get back to you within 24 hours. The first consultation is free and non-binding.">Beschreiben Sie kurz was Sie brauchen – wir melden uns innerhalb von 24 Stunden. Das erste Gespräch ist kostenlos und unverbindlich.</span>
+        </p>
 
         <div style="display:flex;flex-direction:column;gap:.75rem">
-          <a href="mailto:aw@awedi.info" style="display:flex;align-items:center;gap:.875rem;padding:1rem 1.25rem;border:1px solid var(--border);border-radius:10px;text-decoration:none;transition:background .2s" onmouseover="this.style.background='var(--bg-sub)'" onmouseout="this.style.background='transparent'">
-            <div style="width:34px;height:34px;border-radius:8px;background:color-mix(in srgb,var(--accent) 12%,transparent);display:flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true">
-              <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--accent)"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          <a href="mailto:aw@awedi.info" class="contact-link" aria-label="E-Mail senden">
+            <div style="width:36px;height:36px;border-radius:9px;background:var(--blue-tint);display:flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--blue)"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             </div>
-            <div><div style="font-size:.68rem;color:var(--muted);font-weight:500">E-Mail</div><div style="font-size:.875rem;font-weight:600;color:var(--text)">aw@awedi.info</div></div>
+            <div>
+              <div style="font-size:.68rem;color:var(--slate);font-weight:500" data-de="E-Mail" data-en="Email">E-Mail</div>
+              <div style="font-size:.875rem;font-weight:600;color:var(--text)">aw@awedi.info</div>
+            </div>
           </a>
-          <a href="tel:+4901727149076" style="display:flex;align-items:center;gap:.875rem;padding:1rem 1.25rem;border:1px solid var(--border);border-radius:10px;text-decoration:none;transition:background .2s" onmouseover="this.style.background='var(--bg-sub)'" onmouseout="this.style.background='transparent'">
-            <div style="width:34px;height:34px;border-radius:8px;background:color-mix(in srgb,var(--accent) 12%,transparent);display:flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true">
-              <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--accent)"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          <a href="tel:+4901727149076" class="contact-link" aria-label="Anrufen">
+            <div style="width:36px;height:36px;border-radius:9px;background:var(--blue-tint);display:flex;align-items:center;justify-content:center;flex-shrink:0" aria-hidden="true">
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="color:var(--blue)"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
             </div>
-            <div><div style="font-size:.68rem;color:var(--muted);font-weight:500">Telefon</div><div style="font-size:.875rem;font-weight:600;color:var(--text)">0172 7149076</div></div>
+            <div>
+              <div style="font-size:.68rem;color:var(--slate);font-weight:500" data-de="Telefon" data-en="Phone">Telefon</div>
+              <div style="font-size:.875rem;font-weight:600;color:var(--text)">0172 7149076</div>
+            </div>
           </a>
         </div>
       </div>
 
-      <div class="fade-up" style="background:var(--bg-sub);border:1px solid var(--border);border-radius:12px;padding:1.75rem;margin-top:2rem">
-        <h3 style="font-size:1rem;font-weight:700;color:var(--text);margin:0 0 1.25rem">Kostenlose Anfrage</h3>
+      <!-- Right: Form -->
+      <div class="fade" style="animation-delay:.1s;background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:2rem">
+        <h3 style="font-size:1rem;font-weight:700;color:var(--text);margin:0 0 1.25rem" data-de="Kostenlose Anfrage" data-en="Free enquiry">Kostenlose Anfrage</h3>
         <form id="contact-form" style="display:flex;flex-direction:column;gap:.875rem" novalidate>
           <input type="hidden" name="access_key" value="3c09c026-d85f-4fbe-9bb3-febc615ee847">
           <input type="hidden" name="subject" value="Neue Anfrage über awedi.info">
@@ -411,258 +751,253 @@
 
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
             <div>
-              <label for="name" style="display:block;font-size:.72rem;font-weight:600;color:var(--text);margin-bottom:.3rem">Name <span aria-hidden="true">*</span><span class="sr-only">(Pflichtfeld)</span></label>
-              <input type="text" id="name" name="name" required autocomplete="name" placeholder="Max Mustermann" class="field" aria-describedby="name-error">
-              <p class="err-msg" id="name-error" role="alert">Bitte Namen eingeben.</p>
+              <label for="name" style="display:block;font-size:.72rem;font-weight:600;color:var(--text);margin-bottom:.3rem">
+                <span data-de="Name" data-en="Name">Name</span> <span aria-hidden="true">*</span>
+              </label>
+              <input type="text" id="name" name="name" required autocomplete="name" placeholder="Max Mustermann" class="field" aria-describedby="name-err">
+              <p class="err" id="name-err" role="alert" data-de="Bitte Namen eingeben." data-en="Please enter your name.">Bitte Namen eingeben.</p>
             </div>
             <div>
-              <label for="company" style="display:block;font-size:.72rem;font-weight:600;color:var(--text);margin-bottom:.3rem">Firma</label>
+              <label for="company" style="display:block;font-size:.72rem;font-weight:600;color:var(--text);margin-bottom:.3rem" data-de="Firma (optional)" data-en="Company (optional)">Firma (optional)</label>
               <input type="text" id="company" name="company" autocomplete="organization" placeholder="Muster GmbH" class="field">
             </div>
           </div>
 
           <div>
-            <label for="email" style="display:block;font-size:.72rem;font-weight:600;color:var(--text);margin-bottom:.3rem">E-Mail <span aria-hidden="true">*</span><span class="sr-only">(Pflichtfeld)</span></label>
-            <input type="email" id="email" name="email" required autocomplete="email" placeholder="max@mustermann.de" class="field" aria-describedby="email-error">
-            <p class="err-msg" id="email-error" role="alert">Bitte gültige E-Mail eingeben.</p>
+            <label for="email" style="display:block;font-size:.72rem;font-weight:600;color:var(--text);margin-bottom:.3rem">E-Mail <span aria-hidden="true">*</span></label>
+            <input type="email" id="email" name="email" required autocomplete="email" placeholder="max@mustermann.de" class="field" aria-describedby="email-err">
+            <p class="err" id="email-err" role="alert" data-de="Bitte gültige E-Mail eingeben." data-en="Please enter a valid email.">Bitte gültige E-Mail eingeben.</p>
           </div>
 
           <div>
-            <label for="service" style="display:block;font-size:.72rem;font-weight:600;color:var(--text);margin-bottom:.3rem">Gewünschte Leistung</label>
+            <label for="service" style="display:block;font-size:.72rem;font-weight:600;color:var(--text);margin-bottom:.3rem" data-de="Gewünschte Leistung" data-en="Service needed">Gewünschte Leistung</label>
             <select id="service" name="service" class="field" style="cursor:pointer;appearance:none;background-image:url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e\");background-position:right .75rem center;background-repeat:no-repeat;background-size:1.25em;padding-right:2.5rem">
-              <option value="">Bitte wählen…</option>
-              <option value="logo">Logo Design</option>
-              <option value="website">Webseite</option>
-              <option value="branding">Branding / CI</option>
-              <option value="social">Social Media</option>
-              <option value="technik">Technik-Support</option>
-              <option value="paket">Paket / Mehreres</option>
+              <option value="" data-de="Bitte wählen…" data-en="Please select…">Bitte wählen…</option>
+              <option value="it" data-de="IT-Infrastruktur & Netzwerk" data-en="IT Infrastructure & Network">IT-Infrastruktur & Netzwerk</option>
+              <option value="digital" data-de="Digitalisierung & Automatisierung" data-en="Digitalization & Automation">Digitalisierung & Automatisierung</option>
+              <option value="handwerk" data-de="Handwerksvermittlung" data-en="Trade Network">Handwerksvermittlung</option>
+              <option value="paket" data-de="Mehreres / Paket" data-en="Multiple / Package">Mehreres / Paket</option>
             </select>
           </div>
 
           <div>
-            <label for="message" style="display:block;font-size:.72rem;font-weight:600;color:var(--text);margin-bottom:.3rem">Nachricht <span aria-hidden="true">*</span><span class="sr-only">(Pflichtfeld)</span></label>
-            <textarea id="message" name="message" required rows="4" placeholder="Beschreiben Sie kurz Ihr Projekt…" class="field" style="resize:none" aria-describedby="message-error"></textarea>
-            <p class="err-msg" id="message-error" role="alert">Bitte min. 10 Zeichen eingeben.</p>
+            <label for="message" style="display:block;font-size:.72rem;font-weight:600;color:var(--text);margin-bottom:.3rem">
+              <span data-de="Nachricht" data-en="Message">Nachricht</span> <span aria-hidden="true">*</span>
+            </label>
+            <textarea id="message" name="message" required rows="4" placeholder="Beschreiben Sie kurz Ihr Anliegen…" class="field" style="resize:none" aria-describedby="msg-err"></textarea>
+            <p class="err" id="msg-err" role="alert" data-de="Bitte min. 10 Zeichen eingeben." data-en="Please enter at least 10 characters.">Bitte min. 10 Zeichen eingeben.</p>
           </div>
 
           <div>
             <div style="display:flex;align-items:flex-start;gap:.5rem">
-              <input type="checkbox" id="privacy" name="privacy" required style="margin-top:2px;width:14px;height:14px;flex-shrink:0;cursor:pointer;accent-color:var(--accent)" aria-describedby="privacy-error">
-              <label for="privacy" style="font-size:.72rem;color:var(--muted);line-height:1.6;cursor:pointer">
-                Ich habe die <a href="datenschutz.html" style="color:var(--accent)">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Daten zu. <span aria-hidden="true">*</span>
+              <input type="checkbox" id="privacy" name="privacy" required style="margin-top:2px;width:14px;height:14px;flex-shrink:0;cursor:pointer;accent-color:var(--blue)" aria-describedby="priv-err">
+              <label for="privacy" style="font-size:.72rem;color:var(--slate);line-height:1.6;cursor:pointer">
+                <span data-de="Ich habe die" data-en="I have read the">Ich habe die</span>
+                <a href="datenschutz.html" style="color:var(--blue)" data-de="Datenschutzerklärung" data-en="privacy policy">Datenschutzerklärung</a>
+                <span data-de="gelesen und stimme der Verarbeitung zu." data-en="and agree to the processing of my data.">gelesen und stimme der Verarbeitung zu.</span>
+                <span aria-hidden="true"> *</span>
               </label>
             </div>
-            <p class="err-msg" id="privacy-error" role="alert">Bitte Datenschutzerklärung akzeptieren.</p>
+            <p class="err" id="priv-err" role="alert" data-de="Bitte Datenschutzerklärung akzeptieren." data-en="Please accept the privacy policy.">Bitte Datenschutzerklärung akzeptieren.</p>
           </div>
 
-          <button type="submit" id="submit-btn" style="width:100%;padding:.75rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-weight:600;font-size:.875rem;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:opacity .2s">
-            <span id="btn-text">Anfrage absenden</span>
+          <button type="submit" id="submit-btn" class="btn-primary" style="width:100%;justify-content:center">
+            <span id="btn-text" data-de="Anfrage absenden" data-en="Send enquiry">Anfrage absenden</span>
             <svg id="btn-icon" width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
           </button>
 
-          <div id="form-success" style="display:none;padding:.875rem;background:color-mix(in srgb,#22C55E 10%,transparent);border:1px solid #22C55E55;border-radius:8px;font-size:.8rem;color:#16A34A;font-weight:500;text-align:center" role="alert">
-            Vielen Dank! Ich melde mich innerhalb von 24 Stunden bei Ihnen.
+          <div id="form-success" style="display:none;padding:.875rem;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.3);border-radius:8px;font-size:.8rem;color:#16A34A;font-weight:500;text-align:center" role="alert">
+            <span data-de="Vielen Dank! Wir melden uns innerhalb von 24 Stunden." data-en="Thank you! We'll get back to you within 24 hours.">Vielen Dank! Wir melden uns innerhalb von 24 Stunden.</span>
           </div>
         </form>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- ===== FOOTER ===== -->
+<!-- ═══════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
 <footer style="border-top:1px solid var(--border);padding:2.5rem 1.5rem" role="contentinfo">
-  <div style="max-width:68rem;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.5rem">
-    <div style="display:flex;align-items:center;gap:.5rem">
-      <div style="width:24px;height:24px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center" aria-hidden="true">
-        <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M7 1L13 7L7 13L1 7L7 1Z" fill="white"/></svg>
+  <div style="max-width:72rem;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.5rem">
+    <div style="display:flex;align-items:center;gap:.625rem">
+      <div style="width:26px;height:26px;background:linear-gradient(135deg,var(--blue),var(--cyan));border-radius:7px;display:flex;align-items:center;justify-content:center" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="3" r="1.8" fill="white"/><circle cx="2" cy="11" r="1.8" fill="white"/><circle cx="12" cy="11" r="1.8" fill="white"/><line x1="7" y1="4.8" x2="2" y2="9.2" stroke="white" stroke-width="1.1"/><line x1="7" y1="4.8" x2="12" y2="9.2" stroke="white" stroke-width="1.1"/></svg>
       </div>
-      <span style="font-weight:700;font-size:.85rem;color:var(--text)">awedi Dienstleistungen</span>
+      <span style="font-family:'Outfit',sans-serif;font-weight:700;font-size:.9rem;color:var(--text)" data-de="awedi Dienstleistungen" data-en="awedi Services">awedi Dienstleistungen</span>
     </div>
     <nav aria-label="Footer-Links" style="display:flex;flex-wrap:wrap;gap:1.25rem">
-      <a href="#leistungen" style="font-size:.78rem;color:var(--muted);text-decoration:none">Leistungen</a>
-      <a href="#ueber-mich" style="font-size:.78rem;color:var(--muted);text-decoration:none">Über mich</a>
-      <a href="#kontakt" style="font-size:.78rem;color:var(--muted);text-decoration:none">Kontakt</a>
-      <a href="impressum.html" style="font-size:.78rem;color:var(--muted);text-decoration:none">Impressum</a>
-      <a href="datenschutz.html" style="font-size:.78rem;color:var(--muted);text-decoration:none">Datenschutz</a>
-      <button id="open-cookie-settings" style="font-size:.78rem;color:var(--muted);background:none;border:none;cursor:pointer;font-family:inherit;padding:0">Cookie-Einstellungen</button>
+      <a href="#leistungen" style="font-size:.78rem;color:var(--slate);text-decoration:none" data-de="Leistungen" data-en="Services">Leistungen</a>
+      <a href="#ueber" style="font-size:.78rem;color:var(--slate);text-decoration:none" data-de="Über uns" data-en="About">Über uns</a>
+      <a href="#kontakt" style="font-size:.78rem;color:var(--slate);text-decoration:none" data-de="Kontakt" data-en="Contact">Kontakt</a>
+      <a href="impressum.html" style="font-size:.78rem;color:var(--slate);text-decoration:none">Impressum</a>
+      <a href="datenschutz.html" style="font-size:.78rem;color:var(--slate);text-decoration:none">Datenschutz</a>
+      <button id="ck-reopen" style="font-size:.78rem;color:var(--slate);background:none;border:none;cursor:pointer;font-family:inherit;padding:0" data-de="Cookie-Einstellungen" data-en="Cookie settings">Cookie-Einstellungen</button>
     </nav>
   </div>
-  <div style="max-width:68rem;margin:.875rem auto 0;padding-top:.875rem;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem">
-    <p style="font-size:.72rem;color:var(--muted);margin:0">© 2025 awedi Dienstleistungen. Alle Rechte vorbehalten.</p>
-    <p style="font-size:.72rem;color:var(--muted);margin:0">Handgemacht mit Sorgfalt.</p>
+  <div style="max-width:72rem;margin:.875rem auto 0;padding-top:.875rem;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem">
+    <p style="font-size:.72rem;color:var(--slate);margin:0">© 2025 awedi Dienstleistungen. <span data-de="Alle Rechte vorbehalten." data-en="All rights reserved.">Alle Rechte vorbehalten.</span></p>
+    <p style="font-size:.72rem;color:var(--slate);margin:0" data-de="Mit Sorgfalt gemacht." data-en="Made with care.">Mit Sorgfalt gemacht.</p>
   </div>
 </footer>
 
-<button id="back-to-top" aria-label="Nach oben scrollen" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:50;width:38px;height:38px;border-radius:8px;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center">
-  <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+<!-- Back to top -->
+<button id="btt" aria-label="Nach oben scrollen" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:50;width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--cyan));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px -2px rgba(29,78,216,.4)">
+  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
 </button>
 
+<!-- Responsive helpers -->
+<style>
+  @media(min-width:768px) {
+    .md-flex { display:flex !important; }
+    .md-show { display:inline-flex !important; }
+    .md-hide { display:none !important; }
+  }
+</style>
+
 <script>
-  // ===== THEME =====
-  const html = document.documentElement;
-  const stored = localStorage.getItem('awedi_theme');
-  if (stored) html.setAttribute('data-theme', stored);
-  else if (window.matchMedia('(prefers-color-scheme: dark)').matches) html.setAttribute('data-theme', 'dark');
-
-  const iconSun = document.getElementById('icon-sun');
-  const iconMoon = document.getElementById('icon-moon');
-  function updateIcons() {
-    const dark = html.getAttribute('data-theme') === 'dark';
-    iconSun.style.display = dark ? 'none' : 'block';
-    iconMoon.style.display = dark ? 'block' : 'none';
-  }
-  updateIcons();
-  document.getElementById('theme-toggle').addEventListener('click', () => {
-    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', next);
-    localStorage.setItem('awedi_theme', next);
-    updateIcons();
+// ── LANGUAGE ──────────────────────────────────────────────
+let currentLang = localStorage.getItem('awedi_lang') || 'de';
+function setLang(l) {
+  currentLang = l;
+  localStorage.setItem('awedi_lang', l);
+  document.documentElement.setAttribute('data-lang', l);
+  document.getElementById('btn-de').classList.toggle('active', l==='de');
+  document.getElementById('btn-en').classList.toggle('active', l==='en');
+  document.querySelectorAll('[data-de]').forEach(el => {
+    const v = el.getAttribute('data-' + l);
+    if (v !== null) el.innerHTML = v;
   });
+  // Update placeholders
+  const ph = { de: { name:'Max Mustermann', msg:'Beschreiben Sie kurz Ihr Anliegen…' }, en: { name:'John Smith', msg:'Briefly describe your needs…' } };
+  document.getElementById('name').placeholder = ph[l].name;
+  document.getElementById('message').placeholder = ph[l].msg;
+}
+setLang(currentLang);
 
-  // ===== NAVBAR =====
-  const nav = document.getElementById('main-nav');
-  const menuBtn = document.getElementById('menu-btn');
-  const mobileMenu = document.getElementById('mobile-menu');
-  const menuBars = document.getElementById('menu-bars');
-  const menuX = document.getElementById('menu-x');
-  let menuOpen = false;
+// ── THEME ─────────────────────────────────────────────────
+const html = document.documentElement;
+const stored = localStorage.getItem('awedi_theme');
+if (stored) html.setAttribute('data-theme', stored);
+else if (window.matchMedia('(prefers-color-scheme: dark)').matches) html.setAttribute('data-theme','dark');
+function syncTheme() {
+  const dark = html.getAttribute('data-theme')==='dark';
+  document.getElementById('ico-sun').style.display = dark?'none':'block';
+  document.getElementById('ico-moon').style.display = dark?'block':'none';
+}
+syncTheme();
+document.getElementById('theme-btn').addEventListener('click', () => {
+  const next = html.getAttribute('data-theme')==='dark'?'light':'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('awedi_theme', next);
+  syncTheme();
+});
 
-  menuBtn.addEventListener('click', () => {
-    menuOpen = !menuOpen;
-    mobileMenu.classList.toggle('open', menuOpen);
-    menuBtn.setAttribute('aria-expanded', String(menuOpen));
-    menuBars.style.display = menuOpen ? 'none' : 'block';
-    menuX.style.display = menuOpen ? 'block' : 'none';
+// ── NAVBAR / SCROLL ───────────────────────────────────────
+const nav = document.getElementById('nav');
+const btt = document.getElementById('btt');
+window.addEventListener('scroll', () => {
+  const s = window.scrollY, h = document.documentElement.scrollHeight - window.innerHeight;
+  document.getElementById('progress').style.width = (h>0?s/h*100:0)+'%';
+  nav.classList.toggle('scrolled', s>60);
+  btt.classList.toggle('show', s>400);
+}, {passive:true});
+btt.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+// ── MOBILE MENU ───────────────────────────────────────────
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+let menuOpen = false;
+menuBtn.addEventListener('click', () => {
+  menuOpen = !menuOpen;
+  mobileMenu.classList.toggle('open', menuOpen);
+  menuBtn.setAttribute('aria-expanded', String(menuOpen));
+  document.getElementById('ico-bars').style.display = menuOpen?'none':'block';
+  document.getElementById('ico-x').style.display = menuOpen?'block':'none';
+});
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  menuOpen=false; mobileMenu.classList.remove('open');
+  menuBtn.setAttribute('aria-expanded','false');
+  document.getElementById('ico-bars').style.display='block';
+  document.getElementById('ico-x').style.display='none';
+}));
+
+// ── SMOOTH SCROLL ─────────────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth',block:'start'}); }
   });
-  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    menuOpen = false; mobileMenu.classList.remove('open');
-    menuBtn.setAttribute('aria-expanded', 'false');
-    menuBars.style.display = 'block'; menuX.style.display = 'none';
-  }));
+});
 
-  // ===== SCROLL =====
-  const backToTop = document.getElementById('back-to-top');
-  window.addEventListener('scroll', () => {
-    const s = window.scrollY, h = document.documentElement.scrollHeight - window.innerHeight;
-    document.getElementById('progress-bar').style.width = (h > 0 ? s / h * 100 : 0) + '%';
-    nav.classList.toggle('scrolled', s > 60);
-    backToTop.classList.toggle('visible', s > 400);
-  }, { passive: true });
-  backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const t = document.querySelector(a.getAttribute('href'));
-      if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-    });
+// ── SCROLL ANIMATIONS ─────────────────────────────────────
+const obs = new IntersectionObserver(entries => {
+  entries.forEach((e,i) => {
+    if (e.isIntersecting) { setTimeout(()=>e.target.classList.add('in'), i*80); obs.unobserve(e.target); }
   });
+}, {threshold:0.08, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fade').forEach(el=>obs.observe(el));
 
-  // ===== SCROLL ANIMATIONS =====
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach((e, i) => {
-      if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 80); obs.unobserve(e.target); }
-    });
-  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+// ── CONTACT FORM ──────────────────────────────────────────
+const form = document.getElementById('contact-form');
+const submitBtn = document.getElementById('submit-btn');
+const btnText = document.getElementById('btn-text');
+const formSuccess = document.getElementById('form-success');
 
-  // ===== CONTACT FORM =====
-  const form = document.getElementById('contact-form');
-  const submitBtn = document.getElementById('submit-btn');
-  const btnText = document.getElementById('btn-text');
-  const formSuccess = document.getElementById('form-success');
+function setErr(id, errId, has) {
+  document.getElementById(id).classList.toggle('field-err', has);
+  document.getElementById(errId).classList.toggle('show', has);
+}
 
-  function setErr(id, errId, has) {
-    document.getElementById(id).classList.toggle('field-err-border', has);
-    document.getElementById(errId).classList.toggle('show', has);
-  }
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const msg = document.getElementById('message').value.trim();
+  const priv = document.getElementById('privacy').checked;
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const ne=!name, ee=!emailOk, me=msg.length<10, pe=!priv;
+  setErr('name','name-err',ne); setErr('email','email-err',ee);
+  setErr('message','msg-err',me); setErr('privacy','priv-err',pe);
+  if(ne||ee||me||pe){form.querySelector('.field-err')?.focus();return;}
 
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const name = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const msg = document.getElementById('message').value.trim();
-    const priv = document.getElementById('privacy').checked;
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    const ne = !name, ee = !emailOk, me = msg.length < 10, pe = !priv;
-    setErr('name','name-error',ne); setErr('email','email-error',ee);
-    setErr('message','message-error',me); setErr('privacy','privacy-error',pe);
-    if (ne||ee||me||pe) { form.querySelector('.field-err-border')?.focus(); return; }
+  submitBtn.disabled=true; submitBtn.style.opacity='.65';
+  btnText.textContent = currentLang==='de'?'Wird gesendet…':'Sending…';
 
-    submitBtn.disabled = true; submitBtn.style.opacity = '.65';
-    btnText.textContent = 'Wird gesendet…';
+  fetch('https://api.web3forms.com/submit',{method:'POST',body:new FormData(form)})
+    .then(r=>r.json())
+    .then(d=>{
+      if(d.success){submitBtn.style.display='none';formSuccess.style.display='block';form.reset();formSuccess.focus();}
+      else{btnText.textContent=currentLang==='de'?'Fehler – bitte erneut':'Error – please retry';submitBtn.disabled=false;submitBtn.style.opacity='1';}
+    })
+    .catch(()=>{btnText.textContent=currentLang==='de'?'Fehler – bitte erneut':'Error – please retry';submitBtn.disabled=false;submitBtn.style.opacity='1';});
+});
+['name','email','message'].forEach(id=>document.getElementById(id).addEventListener('input',()=>setErr(id,id==='message'?'msg-err':id+'-err',false)));
+document.getElementById('privacy').addEventListener('change',()=>setErr('privacy','priv-err',false));
 
-    fetch('https://api.web3forms.com/submit', { method: 'POST', body: new FormData(form) })
-      .then(r => r.json())
-      .then(d => {
-        if (d.success) { submitBtn.style.display = 'none'; formSuccess.style.display = 'block'; form.reset(); formSuccess.focus(); }
-        else { btnText.textContent = 'Fehler – bitte erneut versuchen'; submitBtn.disabled = false; submitBtn.style.opacity = '1'; }
-      })
-      .catch(() => { btnText.textContent = 'Fehler – bitte erneut versuchen'; submitBtn.disabled = false; submitBtn.style.opacity = '1'; });
-  });
-  ['name','email','message'].forEach(id => document.getElementById(id).addEventListener('input', () => setErr(id, id+'-error', false)));
-  document.getElementById('privacy').addEventListener('change', () => setErr('privacy','privacy-error',false));
+// ── COOKIE CONSENT ────────────────────────────────────────
+const CK = 'awedi_cookie_consent';
+const overlay = document.getElementById('cookie-overlay');
+function getCk(){try{return JSON.parse(localStorage.getItem(CK));}catch{return null;}}
+function saveCk(p){localStorage.setItem(CK,JSON.stringify({...p,ts:Date.now()}));}
+function loadFonts(){if(document.querySelector('link[data-gf]'))return;['https://fonts.googleapis.com','https://fonts.gstatic.com'].forEach((h,i)=>{const l=document.createElement('link');l.rel='preconnect';l.href=h;if(i===1)l.crossOrigin='anonymous';l.setAttribute('data-gf','1');document.head.appendChild(l);});const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap';l.setAttribute('data-gf','1');document.head.appendChild(l);}
+function loadGA(){if(document.querySelector('script[data-ga]'))return;const s=document.createElement('script');s.src='https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX';s.async=true;s.setAttribute('data-ga','1');document.head.appendChild(s);window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments);};gtag('js',new Date());gtag('config','G-XXXXXXXXXX',{anonymize_ip:true});}
+function loadPixel(){if(window.fbq)return;!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','XXXXXXXXXXXXXXXXXX');fbq('track','PageView');}
+function applyCk(p){if(p.komfort)loadFonts();if(p.statistiken)loadGA();if(p.marketing)loadPixel();}
+function hideBanner(){overlay.classList.remove('active');overlay.setAttribute('aria-hidden','true');}
+function showBanner(){overlay.classList.add('active');overlay.removeAttribute('aria-hidden');setTimeout(()=>document.getElementById('ck-all')?.focus(),50);}
+function trapFocus(el){const items=el.querySelectorAll('button:not([disabled]),[href],input:not([disabled])');const first=items[0],last=items[items.length-1];el.addEventListener('keydown',e=>{if(e.key!=='Tab')return;if(e.shiftKey?document.activeElement===first:document.activeElement===last){e.preventDefault();(e.shiftKey?last:first).focus();}});el.addEventListener('keydown',e=>{if(e.key==='Escape')hideBanner();});}
 
-  // ===== COOKIE CONSENT =====
-  const CONSENT_KEY = 'awedi_cookie_consent';
-  const overlay = document.getElementById('cookie-overlay');
-  function getConsent() { try { return JSON.parse(localStorage.getItem(CONSENT_KEY)); } catch { return null; } }
-  function saveConsent(p) { localStorage.setItem(CONSENT_KEY, JSON.stringify({ ...p, ts: Date.now() })); }
+const ex=getCk();
+if(ex)applyCk(ex);else{showBanner();trapFocus(overlay);}
 
-  function loadFonts() {
-    if (document.querySelector('link[data-gf]')) return;
-    ['https://fonts.googleapis.com','https://fonts.gstatic.com'].forEach((h,i) => {
-      const l = document.createElement('link'); l.rel = 'preconnect'; l.href = h;
-      if (i===1) l.crossOrigin='anonymous'; l.setAttribute('data-gf','1'); document.head.appendChild(l);
-    });
-    const l = document.createElement('link'); l.rel = 'stylesheet';
-    l.href = 'https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap';
-    l.setAttribute('data-gf','1'); document.head.appendChild(l);
-  }
-  function loadGA() {
-    if (document.querySelector('script[data-ga]')) return;
-    const s = document.createElement('script'); s.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX';
-    s.async = true; s.setAttribute('data-ga','1'); document.head.appendChild(s);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function() { dataLayer.push(arguments); };
-    gtag('js', new Date()); gtag('config','G-XXXXXXXXXX',{anonymize_ip:true});
-  }
-  function loadPixel() {
-    if (window.fbq) return;
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init','XXXXXXXXXXXXXXXXXX'); fbq('track','PageView');
-  }
-  function applyConsent(p) { if(p.komfort) loadFonts(); if(p.statistiken) loadGA(); if(p.marketing) loadPixel(); }
-
-  function hideBanner() { overlay.classList.remove('active'); overlay.setAttribute('aria-hidden','true'); }
-  function showBanner() { overlay.classList.add('active'); overlay.removeAttribute('aria-hidden'); setTimeout(()=>document.getElementById('cookie-accept-all')?.focus(),50); }
-  function trapFocus(el) {
-    const items = el.querySelectorAll('button:not([disabled]),[href],input:not([disabled])');
-    const first = items[0], last = items[items.length-1];
-    el.addEventListener('keydown', e => {
-      if (e.key!=='Tab') return;
-      if (e.shiftKey ? document.activeElement===first : document.activeElement===last) { e.preventDefault(); (e.shiftKey?last:first).focus(); }
-    });
-    el.addEventListener('keydown', e => { if(e.key==='Escape') hideBanner(); });
-  }
-
-  const ex = getConsent();
-  if (ex) applyConsent(ex); else { showBanner(); trapFocus(overlay); }
-
-  document.getElementById('cookie-accept-all').addEventListener('click', () => { const p={notwendig:true,komfort:true,statistiken:true,marketing:true}; saveConsent(p); applyConsent(p); hideBanner(); });
-  document.getElementById('cookie-reject-all').addEventListener('click', () => { saveConsent({notwendig:true,komfort:false,statistiken:false,marketing:false}); hideBanner(); });
-  document.getElementById('cookie-settings-toggle').addEventListener('click', () => { document.getElementById('cookie-simple-view').style.display='none'; document.getElementById('cookie-detail-view').style.display='block'; document.getElementById('toggle-komfort').focus(); });
-  document.getElementById('cookie-back').addEventListener('click', () => { document.getElementById('cookie-detail-view').style.display='none'; document.getElementById('cookie-simple-view').style.display='block'; document.getElementById('cookie-accept-all').focus(); });
-  document.getElementById('cookie-save-selection').addEventListener('click', () => {
-    const p={notwendig:true,komfort:document.getElementById('toggle-komfort').checked,statistiken:document.getElementById('toggle-statistiken').checked,marketing:document.getElementById('toggle-marketing').checked};
-    saveConsent(p); applyConsent(p); hideBanner();
-  });
-  document.getElementById('open-cookie-settings').addEventListener('click', () => {
-    localStorage.removeItem(CONSENT_KEY);
-    document.getElementById('cookie-detail-view').style.display='none';
-    document.getElementById('cookie-simple-view').style.display='block';
-    showBanner(); trapFocus(overlay);
-  });
+document.getElementById('ck-all').addEventListener('click',()=>{const p={notwendig:true,komfort:true,statistiken:true,marketing:true};saveCk(p);applyCk(p);hideBanner();});
+document.getElementById('ck-reject').addEventListener('click',()=>{saveCk({notwendig:true,komfort:false,statistiken:false,marketing:false});hideBanner();});
+document.getElementById('ck-settings-btn').addEventListener('click',()=>{document.getElementById('ck-simple').style.display='none';document.getElementById('ck-detail').style.display='block';document.getElementById('ck-komfort').focus();});
+document.getElementById('ck-back').addEventListener('click',()=>{document.getElementById('ck-detail').style.display='none';document.getElementById('ck-simple').style.display='block';document.getElementById('ck-all').focus();});
+document.getElementById('ck-save').addEventListener('click',()=>{const p={notwendig:true,komfort:document.getElementById('ck-komfort').checked,statistiken:document.getElementById('ck-stats').checked,marketing:document.getElementById('ck-mkt').checked};saveCk(p);applyCk(p);hideBanner();});
+document.getElementById('ck-reopen').addEventListener('click',()=>{localStorage.removeItem(CK);document.getElementById('ck-detail').style.display='none';document.getElementById('ck-simple').style.display='block';showBanner();trapFocus(overlay);});
 </script>
 </body>
 </html>
