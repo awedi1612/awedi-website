@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kursbereich — Zahlen. Preise. Gewinn.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+    :root {
+      --navy:      #0F2044;
+      --blue:      #1D4ED8;
+      --blue-mid:  #2563EB;
+      --blue-lt:   #3B82F6;
+      --cyan:      #0EA5E9;
+      --border:    #DBEAFE;
+      --blue-tint: #EFF6FF;
+      --slate:     #64748B;
+      --text:      #0F172A;
+      --bg:        #FFFFFF;
+      --bg-sub:    #F8FAFC;
+      --card:      #FFFFFF;
+      --sidebar-w: 300px;
+    }
+    [data-theme="dark"] {
+      --border:    #1E3A5F;
+      --blue-tint: #1E3A5F;
+      --slate:     #94A3B8;
+      --text:      #F1F5F9;
+      --bg:        #0D1117;
+      --bg-sub:    #111827;
+      --card:      #1E293B;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      transition: background .3s, color .3s;
+      overflow-x: hidden;
+    }
+    h1,h2,h3,h4 { font-family: 'Outfit', system-ui, sans-serif; letter-spacing: -.02em; }
+    .grad { background: linear-gradient(135deg, var(--blue), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      height: 56px;
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 20px; gap: 16px;
+    }
+    .logo {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem; font-weight: 800;
+      letter-spacing: -.03em;
+      text-decoration: none; color: var(--text);
+      white-space: nowrap;
+    }
+    .logo span { background: linear-gradient(135deg,var(--blue),var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .header-sep { width: 1px; height: 20px; background: var(--border); }
+    .header-title {
+      font-size: .82rem; font-weight: 500; color: var(--slate);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      flex: 1;
+    }
+    /* Progress bar */
+    .progress-wrap {
+      display: flex; align-items: center; gap: 8px;
+      white-space: nowrap;
+    }
+    .progress-track {
+      width: 100px; height: 4px;
+      background: var(--border); border-radius: 99px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      border-radius: 99px;
+      transition: width .4s ease;
+    }
+    .progress-label { font-size: .72rem; color: var(--slate); }
+    .btn-vorlage {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--blue-tint); border: 1px solid var(--border);
+      color: var(--blue-mid); font-size: .75rem; font-weight: 600;
+      padding: 6px 14px; border-radius: 8px;
+      text-decoration: none; white-space: nowrap;
+      transition: background .15s, border-color .15s;
+    }
+    .btn-vorlage:hover { background: var(--border); border-color: var(--blue-lt); }
+    .theme-btn {
+      background: var(--blue-tint); border: 1px solid var(--border);
+      border-radius: 8px; width: 32px; height: 32px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--slate); transition: all .2s;
+    }
+    .theme-btn:hover { border-color: var(--blue-lt); color: var(--blue); }
+
+    /* ── LAYOUT ── */
+    .layout {
+      flex: 1; display: flex;
+      height: calc(100vh - 56px);
+    }
+
+    /* ── SIDEBAR ── */
+    aside {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      border-right: 1px solid var(--border);
+      background: var(--bg-sub);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    aside::-webkit-scrollbar { width: 4px; }
+    aside::-webkit-scrollbar-track { background: transparent; }
+    aside::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+    .module-block { border-bottom: 1px solid var(--border); }
+    .module-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: background .15s;
+      user-select: none;
+    }
+    .module-header:hover { background: var(--border); }
+    .module-header.active { background: color-mix(in srgb, var(--blue) 8%, transparent); }
+    .module-num {
+      font-size: .65rem; font-weight: 700; letter-spacing: .1em;
+      color: var(--blue); text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+    .module-title { font-size: .82rem; font-weight: 600; color: var(--text); line-height: 1.3; }
+    .module-meta { font-size: .7rem; color: var(--slate); margin-top: 2px; }
+    .chevron {
+      flex-shrink: 0; color: var(--slate);
+      transition: transform .25s;
+    }
+    .module-header.open .chevron { transform: rotate(90deg); }
+
+    .lessons-list {
+      max-height: 0; overflow: hidden;
+      transition: max-height .3s ease;
+    }
+    .lessons-list.open { max-height: 600px; }
+
+    .lesson-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 16px 9px 24px;
+      cursor: pointer;
+      transition: background .12s;
+      border-left: 3px solid transparent;
+    }
+    .lesson-item:hover { background: color-mix(in srgb, var(--blue) 5%, transparent); }
+    .lesson-item.active {
+      background: color-mix(in srgb, var(--blue) 10%, transparent);
+      border-left-color: var(--blue);
+    }
+    .lesson-check {
+      width: 18px; height: 18px; flex-shrink: 0;
+      border-radius: 50%; border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      transition: all .2s;
+    }
+    .lesson-item.done .lesson-check {
+      background: var(--blue); border-color: var(--blue);
+    }
+    .lesson-title { font-size: .8rem; color: var(--text); line-height: 1.3; flex: 1; }
+    .lesson-item.active .lesson-title { color: var(--blue); font-weight: 600; }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1; overflow-y: auto;
+      display: flex; flex-direction: column;
+    }
+    .video-area {
+      background: #000;
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      max-height: 65vh;
+      flex-shrink: 0;
+    }
+    #player {
+      width: 100%; height: 100%;
+      display: block;
+    }
+    .video-placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
+      color: #fff;
+    }
+    .video-placeholder svg { opacity: .4; }
+    .video-placeholder p { font-size: .85rem; opacity: .4; }
+
+    .lesson-info {
+      padding: 24px 32px;
+      flex: 1;
+    }
+    .lesson-info-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 16px;
+      margin-bottom: 20px;
+    }
+    .lesson-badge {
+      font-size: .7rem; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--blue);
+      background: var(--blue-tint); border: 1px solid var(--border);
+      padding: 3px 10px; border-radius: 99px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    #current-title {
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      font-weight: 700; color: var(--text); line-height: 1.2;
+    }
+    .nav-btns {
+      display: flex; gap: 10px; flex-shrink: 0;
+    }
+    .nav-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .8rem; font-weight: 600;
+      padding: 8px 16px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--text); cursor: pointer;
+      text-decoration: none;
+      transition: all .15s;
+    }
+    .nav-btn:hover { border-color: var(--blue-lt); color: var(--blue); }
+    .nav-btn.primary {
+      background: linear-gradient(135deg, var(--blue-mid), var(--blue-lt));
+      color: #fff; border: none;
+      box-shadow: 0 2px 8px rgba(29,78,216,.2);
+    }
+    .nav-btn.primary:hover { opacity: .9; }
+    .nav-btn:disabled { opacity: .35; pointer-events: none; }
+
+    /* Vorlage card */
+    .vorlage-card {
+      margin: 0 32px 32px;
+      padding: 20px 24px;
+      background: var(--blue-tint);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .vorlage-icon {
+      width: 44px; height: 44px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .vorlage-card h3 { font-size: .9rem; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .vorlage-card p { font-size: .78rem; color: var(--slate); }
+    .btn-dl {
+      margin-left: auto; flex-shrink: 0;
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, var(--blue-mid), var(--blue-lt));
+      color: #fff; font-size: .8rem; font-weight: 600;
+      padding: 9px 18px; border-radius: 8px;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(29,78,216,.2);
+      transition: opacity .15s;
+    }
+    .btn-dl:hover { opacity: .9; }
+
+    /* Mobile sidebar toggle */
+    .sidebar-toggle {
+      display: none;
+      background: var(--blue-tint); border: 1px solid var(--border);
+      border-radius: 8px; width: 32px; height: 32px;
+      align-items: center; justify-content: center;
+      cursor: pointer; color: var(--slate);
+    }
+
+    @media (max-width: 768px) {
+      :root { --sidebar-w: 280px; }
+      aside {
+        position: fixed; top: 56px; left: 0; bottom: 0; z-index: 50;
+        transform: translateX(-100%);
+        transition: transform .3s ease;
+        box-shadow: 4px 0 20px rgba(0,0,0,.15);
+      }
+      aside.open { transform: translateX(0); }
+      .sidebar-toggle { display: flex; }
+      .progress-wrap { display: none; }
+      .lesson-info { padding: 16px; }
+      .vorlage-card { margin: 0 16px 16px; flex-wrap: wrap; }
+      .btn-dl { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Menü">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <a href="/" class="logo">aw<span>edi</span></a>
+  <div class="header-sep"></div>
+  <span class="header-title">Zahlen. Preise. Gewinn.</span>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <span class="progress-label" id="progress-label">0 / 33</span>
+  </div>
+  <a href="https://docs.google.com/spreadsheets/d/1AuVFD_TV_eAw_Omo5hLyuLqPFURhiseVwtFy97RfA04/copy" target="_blank" class="btn-vorlage">
+    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/></svg>
+    Vorlage holen
+  </a>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Theme">
+    <svg id="sun" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg id="moon" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</header>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar"></aside>
+
+  <!-- MAIN -->
+  <main>
+    <div class="video-area">
+      <video id="player" controls preload="metadata"></video>
+      <div class="video-placeholder" id="placeholder">
+        <svg width="56" height="56" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+        <p>Lektion auswählen</p>
+      </div>
+    </div>
+
+    <div class="lesson-info">
+      <div class="lesson-info-top">
+        <div>
+          <div class="lesson-badge" id="current-badge">Modul 1</div>
+          <h1 id="current-title" style="margin-top:8px">Wähle eine Lektion aus der linken Navigation</h1>
+        </div>
+        <div class="nav-btns">
+          <button class="nav-btn" id="btn-prev" onclick="navLesson(-1)" disabled>
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            Zurück
+          </button>
+          <button class="nav-btn primary" id="btn-next" onclick="navLesson(1)" disabled>
+            Weiter
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VORLAGE CARD -->
+    <div class="vorlage-card">
+      <div class="vorlage-icon">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+      </div>
+      <div>
+        <h3>Kalkulations-Vorlage</h3>
+        <p>Google Sheets — alle Formeln bereits eingebaut, sofort einsatzbereit</p>
+      </div>
+      <a href="https://docs.google.com/spreadsheets/d/1AuVFD_TV_eAw_Omo5hLyuLqPFURhiseVwtFy97RfA04/copy" target="_blank" class="btn-dl">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/></svg>
+        Kopie erstellen
+      </a>
+    </div>
+  </main>
+</div>
+
+<script>
+const curriculum = [
+  {
+    title: "Die Grundlage",
+    lessons: [
+      { id: "01_01", title: "Willkommen" },
+      { id: "01_02", title: "Warum Preise falsch sind" },
+      { id: "01_03", title: "Die 3 wichtigen Zahlen" },
+      { id: "01_04", title: "Wie alles zusammenhängt" },
+    ]
+  },
+  {
+    title: "Wareneinsatz",
+    lessons: [
+      { id: "02_01", title: "Einführung Wareneinsatz" },
+      { id: "02_02", title: "Rezeptkalkulation" },
+      { id: "02_03", title: "Food-Cost-Formel" },
+      { id: "02_04", title: "Häufige Fehler" },
+      { id: "02_05", title: "Abschluss" },
+    ]
+  },
+  {
+    title: "Preise richtig setzen",
+    lessons: [
+      { id: "03_01", title: "Preis aus eigenen Zahlen" },
+      { id: "03_02", title: "Die Preisformel" },
+      { id: "03_03", title: "Psychologie der Preisgestaltung" },
+      { id: "03_04", title: "Kostenfresser erkennen" },
+      { id: "03_05", title: "Preise erhöhen" },
+      { id: "03_06", title: "Abschluss" },
+    ]
+  },
+  {
+    title: "Personal & Fixkosten",
+    lessons: [
+      { id: "04_01", title: "Personalkosten — der häufige Fehler" },
+      { id: "04_02", title: "Personalkosten in %" },
+      { id: "04_03", title: "Fixkosten" },
+      { id: "04_04", title: "Gesamtkostenformel" },
+      { id: "04_05", title: "Kosten senken" },
+      { id: "04_06", title: "Abschluss" },
+    ]
+  },
+  {
+    title: "Break-Even",
+    lessons: [
+      { id: "05_01", title: "Was ist Break-Even?" },
+      { id: "05_02", title: "Break-Even-Formel" },
+      { id: "05_03", title: "Break-Even in Gästen & Tagen" },
+      { id: "05_04", title: "Rückwärts planen" },
+      { id: "05_05", title: "Break-Even nicht erreicht" },
+      { id: "05_06", title: "Abschluss" },
+    ]
+  },
+  {
+    title: "Das System etablieren",
+    lessons: [
+      { id: "06_01", title: "Alles zusammenführen" },
+      { id: "06_02", title: "Monatliche Kontrollroutine" },
+      { id: "06_03", title: "Preise erhöhen — wann & wie" },
+      { id: "06_04", title: "Die Vorlage" },
+      { id: "06_05", title: "30-Tage-Umsetzungsplan" },
+      { id: "06_06", title: "Abschluss & Verabschiedung" },
+    ]
+  }
+];
+
+// Flache Liste aller Lektionen
+const allLessons = [];
+curriculum.forEach((mod, mi) => {
+  mod.lessons.forEach((les, li) => {
+    allLessons.push({ modIdx: mi, lesIdx: li, ...les });
+  });
+});
+const TOTAL = allLessons.length;
+
+// Progress aus localStorage
+function getProgress() {
+  try { return JSON.parse(localStorage.getItem('kurs_done') || '{}'); } catch { return {}; }
+}
+function setDone(id) {
+  const p = getProgress(); p[id] = true;
+  localStorage.setItem('kurs_done', JSON.stringify(p));
+}
+function isDone(id) { return !!getProgress()[id]; }
+
+// Aktueller Index
+let currentIdx = -1;
+
+function videoPath(id) {
+  const modNum = id.substring(0,2);
+  const modFolder = `Modul_${parseInt(modNum)}`;
+  // Dateiname aus Curriculum-Titel ableiten
+  const lesson = allLessons.find(l => l.id === id);
+  const titleMap = {
+    "01_01": "01_01_Willkommen",
+    "01_02": "01_02_Warum_Preise_falsch_sind",
+    "01_03": "01_03_Die_3_wichtigen_Zahlen",
+    "01_04": "01_04_Wie_alles_zusammenhaengt",
+    "02_01": "02_01_Einfuehrung_Wareneinsatz",
+    "02_02": "02_02_Rezeptkalkulation",
+    "02_03": "02_03_Food_Cost_Formel",
+    "02_04": "02_04_Haeufige_Fehler",
+    "02_05": "02_05_Abschluss",
+    "03_01": "03_01_Preis_aus_eigenen_Zahlen",
+    "03_02": "03_02_Die_Preisformel",
+    "03_03": "03_03_Psychologie_Preisgestaltung",
+    "03_04": "03_04_Kostenfresser_erkennen",
+    "03_05": "03_05_Preise_erhoehen",
+    "03_06": "03_06_Abschluss",
+    "04_01": "04_01_Personalkosten_Fehler",
+    "04_02": "04_02_Personalkosten_Prozent",
+    "04_03": "04_03_Fixkosten",
+    "04_04": "04_04_Gesamtkostenformel",
+    "04_05": "04_05_Kosten_senken",
+    "04_06": "04_06_Abschluss",
+    "05_01": "05_01_Was_ist_Break_Even",
+    "05_02": "05_02_Break_Even_Formel",
+    "05_03": "05_03_Break_Even_Gaeste_Tage",
+    "05_04": "05_04_Rueckwaerts_planen",
+    "05_05": "05_05_Break_Even_nicht_erreicht",
+    "05_06": "05_06_Abschluss",
+    "06_01": "06_01_Alles_zusammenfuehren",
+    "06_02": "06_02_Monatliche_Kontrollroutine",
+    "06_03": "06_03_Preise_erhoehen_wann_wie",
+    "06_04": "06_04_Die_Vorlage",
+    "06_05": "06_05_Umsetzungsplan",
+    "06_06": "06_06_Abschluss_Verabschiedung",
+  };
+  return `/kurs/videos/${modFolder}/${titleMap[id]}.mp4`;
+}
+
+function loadLesson(idx) {
+  if (idx < 0 || idx >= TOTAL) return;
+  currentIdx = idx;
+  const lesson = allLessons[idx];
+  const mod = curriculum[lesson.modIdx];
+
+  // Video laden
+  const player = document.getElementById('player');
+  const placeholder = document.getElementById('placeholder');
+  player.src = videoPath(lesson.id);
+  player.load();
+  placeholder.style.display = 'none';
+  player.style.display = 'block';
+
+  // Video-Ende → als erledigt markieren
+  player.onended = () => {
+    setDone(lesson.id);
+    updateProgress();
+    renderSidebar();
+    // Auto-weiter
+    if (idx + 1 < TOTAL) loadLesson(idx + 1);
+  };
+
+  // UI aktualisieren
+  document.getElementById('current-badge').textContent = `Modul ${lesson.modIdx + 1} · Lektion ${lesson.lesIdx + 1}`;
+  document.getElementById('current-title').textContent = lesson.title;
+  document.getElementById('btn-prev').disabled = idx === 0;
+  document.getElementById('btn-next').disabled = idx === TOTAL - 1;
+
+  // Hash
+  location.hash = lesson.id;
+
+  // Sidebar Fokus
+  renderSidebar();
+  updateProgress();
+
+  // Mobile: Sidebar schließen
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function navLesson(dir) {
+  loadLesson(currentIdx + dir);
+  // Als erledigt markieren beim Weiterklicken
+  if (currentIdx - dir >= 0) {
+    setDone(allLessons[currentIdx - dir].id);
+    updateProgress();
+  }
+}
+
+function updateProgress() {
+  const done = Object.keys(getProgress()).length;
+  const pct = Math.round((done / TOTAL) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${done} / ${TOTAL}`;
+}
+
+function renderSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  let html = '';
+  curriculum.forEach((mod, mi) => {
+    const modDone = mod.lessons.filter(l => isDone(l.id)).length;
+    const isActive = currentIdx >= 0 && allLessons[currentIdx].modIdx === mi;
+    html += `
+      <div class="module-block">
+        <div class="module-header ${isActive ? 'active' : ''} ${isActive ? 'open' : ''}" onclick="toggleModule(this, ${mi})">
+          <div>
+            <div class="module-num">Modul ${String(mi+1).padStart(2,'0')}</div>
+            <div class="module-title">${mod.title}</div>
+            <div class="module-meta">${modDone}/${mod.lessons.length} abgeschlossen</div>
+          </div>
+          <svg class="chevron" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="lessons-list ${isActive ? 'open' : ''}">
+    `;
+    mod.lessons.forEach((les, li) => {
+      const globalIdx = allLessons.findIndex(l => l.id === les.id);
+      const done = isDone(les.id);
+      const active = currentIdx === globalIdx;
+      html += `
+        <div class="lesson-item ${active ? 'active' : ''} ${done ? 'done' : ''}" onclick="loadLesson(${globalIdx})">
+          <div class="lesson-check">
+            ${done ? `<svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>` : ''}
+          </div>
+          <span class="lesson-title">${les.title}</span>
+        </div>
+      `;
+    });
+    html += `</div></div>`;
+  });
+  sidebar.innerHTML = html;
+}
+
+function toggleModule(el, idx) {
+  const list = el.nextElementSibling;
+  el.classList.toggle('open');
+  list.classList.toggle('open');
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const dark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', dark ? 'light' : 'dark');
+  document.getElementById('sun').style.display = dark ? 'none' : 'block';
+  document.getElementById('moon').style.display = dark ? 'block' : 'none';
+  localStorage.setItem('theme', dark ? 'light' : 'dark');
+}
+
+// Init
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+  document.documentElement.setAttribute('data-theme', 'dark');
+  document.getElementById('sun').style.display = 'block';
+  document.getElementById('moon').style.display = 'none';
+}
+
+renderSidebar();
+updateProgress();
+
+// Hash-Navigation beim Laden
+const hash = location.hash.replace('#', '');
+if (hash) {
+  const idx = allLessons.findIndex(l => l.id === hash);
+  if (idx >= 0) loadLesson(idx);
+  else loadLesson(0);
+} else {
+  loadLesson(0);
+}
+</script>
+
+</body>
+</html>
