@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Seite nicht gefunden | awedi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+    :root {
+      --navy:       #0F2044;
+      --blue:       #1D4ED8;
+      --blue-mid:   #2563EB;
+      --blue-light: #3B82F6;
+      --cyan:       #0EA5E9;
+      --off-white:  #F8FAFC;
+      --blue-tint:  #EFF6FF;
+      --border:     #DBEAFE;
+      --slate:      #64748B;
+      --text:       #0F172A;
+      --bg:         #FFFFFF;
+    }
+    [data-theme="dark"] {
+      --blue-tint:  #1E3A5F;
+      --border:     #1E3A5F;
+      --slate:      #94A3B8;
+      --text:       #F1F5F9;
+      --bg:         #0D1117;
+      --off-white:  #111827;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      transition: background .3s, color .3s;
+      overflow: hidden;
+    }
+    h1, h2, h3 { font-family: 'Outfit', system-ui, sans-serif; letter-spacing: -.02em; }
+    .grad { background: linear-gradient(135deg, var(--blue), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(20px, 5vw, 60px);
+      height: 64px;
+      background: color-mix(in srgb, var(--bg) 90%, transparent);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem; font-weight: 800;
+      letter-spacing: -.03em;
+      text-decoration: none; color: var(--text);
+    }
+    .logo span { background: linear-gradient(135deg, var(--blue), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .theme-btn {
+      background: var(--blue-tint); border: 1px solid var(--border);
+      border-radius: 8px; width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--slate); transition: all .2s;
+    }
+    .theme-btn:hover { border-color: var(--blue-light); color: var(--blue); }
+
+    /* Main */
+    main {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 80px clamp(20px, 6vw, 80px) 40px;
+      position: relative;
+    }
+
+    /* Background glow */
+    .bg-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(29,78,216,.06) 0%, transparent 70%),
+        radial-gradient(ellipse 30% 30% at 20% 80%, rgba(14,165,233,.04) 0%, transparent 60%);
+    }
+
+    /* Grid lines */
+    .bg-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: .4;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+    [data-theme="dark"] .bg-grid { opacity: .15; }
+
+    .content {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; max-width: 560px;
+    }
+
+    /* 404 number */
+    .num-404 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(7rem, 18vw, 13rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -.04em;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--cyan) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 0 60px rgba(29,78,216,.15));
+    }
+    .num-404::after {
+      content: '404';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: blur(28px);
+      opacity: .25;
+      z-index: -1;
+    }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px;
+      background: var(--blue-tint); border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: .72rem; font-weight: 600; color: var(--slate);
+      letter-spacing: .06em; text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .badge svg { color: var(--blue); }
+
+    h1 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700; color: var(--text);
+      margin-bottom: 14px; line-height: 1.2;
+    }
+    p {
+      font-size: .95rem; color: var(--slate);
+      line-height: 1.7; margin-bottom: 36px;
+    }
+
+    .actions {
+      display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, var(--blue-mid), var(--blue-light));
+      color: #fff; font-family: 'DM Sans', sans-serif;
+      font-size: .875rem; font-weight: 600;
+      padding: 11px 24px; border-radius: 10px;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: opacity .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 14px rgba(29,78,216,.25);
+    }
+    .btn-primary:hover { opacity: .9; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(29,78,216,.3); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--bg); color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .875rem; font-weight: 500;
+      padding: 11px 24px; border-radius: 10px;
+      border: 1px solid var(--border);
+      text-decoration: none; cursor: pointer;
+      transition: border-color .2s, transform .15s;
+    }
+    .btn-secondary:hover { border-color: var(--blue-light); transform: translateY(-1px); }
+
+    /* Suggestion links */
+    .suggestions {
+      margin-top: 48px;
+      display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    }
+    .sug-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .8rem; color: var(--slate);
+      text-decoration: none;
+      padding: 6px 14px;
+      background: var(--off-white); border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: color .15s, border-color .15s;
+    }
+    .sug-link:hover { color: var(--blue); border-color: var(--blue-light); }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: .75rem; color: var(--slate);
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--slate); text-decoration: none; }
+    footer a:hover { color: var(--blue); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">aw<span>edi</span></a>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Theme wechseln">
+    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+</nav>
+
+<main>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div class="content">
+    <div class="num-404">404</div>
+
+    <div class="badge">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>
+      Seite nicht gefunden
+    </div>
+
+    <h1>Diese Seite existiert nicht</h1>
+    <p>
+      Die gesuchte Seite wurde möglicherweise verschoben,
+      umbenannt oder existiert nicht mehr.<br>
+      Kein Problem — von hier geht es weiter.
+    </p>
+
+    <div class="actions">
+      <a href="/" class="btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Zur Startseite
+      </a>
+      <a href="mailto:info@awedi.info" class="btn-secondary">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Kontakt
+      </a>
+    </div>
+
+    <div class="suggestions">
+      <a href="/#leistungen" class="sug-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        Leistungen
+      </a>
+      <a href="/#kontakt" class="sug-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        Kontakt
+      </a>
+      <a href="/kurs" class="sug-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        Kurs
+      </a>
+      <a href="/impressum" class="sug-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        Impressum
+      </a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>© 2026 awedi Dienstleistungen &nbsp;·&nbsp;</span>
+  <a href="/impressum">Impressum</a>
+  <span> &nbsp;·&nbsp; </span>
+  <a href="/datenschutz">Datenschutz</a>
+</footer>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('sun').style.display = isDark ? 'none' : 'block';
+    document.getElementById('moon').style.display = isDark ? 'block' : 'none';
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  }
+  // Gespeichertes Theme laden
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('sun').style.display = 'block';
+    document.getElementById('moon').style.display = 'none';
+  }
+</script>
+</body>
+</html>

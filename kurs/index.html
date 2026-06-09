@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zahlen. Preise. Gewinn. | Der Kurs für Gastronomen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0C0B09;
+      --bg2:       #131108;
+      --bg3:       #1A1710;
+      --gold:      #C4882C;
+      --gold-lt:   #F0B650;
+      --gold-dim:  rgba(196,136,44,0.15);
+      --gold-line: rgba(196,136,44,0.25);
+      --text:      #E8E2D5;
+      --muted:     #7A7066;
+      --faint:     #3A3530;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(12,11,9,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--faint);
+      padding: 0 clamp(20px, 5vw, 80px);
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem; font-weight: 600;
+      letter-spacing: .04em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .btn-nav {
+      background: var(--gold);
+      color: #0C0B09;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .8rem; font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border: none; cursor: pointer;
+      padding: 10px 22px;
+      border-radius: 3px;
+      text-decoration: none;
+      transition: background .2s, transform .15s;
+    }
+    .btn-nav:hover { background: var(--gold-lt); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 92vh;
+      display: flex; align-items: center;
+      padding: clamp(60px, 10vh, 120px) clamp(20px, 8vw, 140px);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 60% 40%, rgba(196,136,44,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: .72rem; font-weight: 600; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 28px;
+    }
+    .hero-tag::before {
+      content: '';
+      display: block; width: 28px; height: 1px;
+      background: var(--gold);
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.6rem, 4.5vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1.12;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold-lt);
+    }
+    .hero-sub {
+      font-size: clamp(.95rem, 1.3vw, 1.1rem);
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 40px;
+    }
+    .hero-cta {
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--gold);
+      color: #0C0B09;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem; font-weight: 700;
+      letter-spacing: .04em;
+      border: none; cursor: pointer;
+      padding: 16px 36px;
+      border-radius: 3px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background .2s, transform .15s, box-shadow .2s;
+    }
+    .btn-primary:hover {
+      background: var(--gold-lt);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(196,136,44,0.25);
+    }
+    .hero-note {
+      font-size: .8rem; color: var(--muted);
+    }
+    .hero-stats {
+      display: grid; gap: 24px;
+    }
+    .stat-card {
+      background: var(--bg3);
+      border: 1px solid var(--gold-line);
+      border-radius: 6px;
+      padding: 28px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--gold);
+    }
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem; font-weight: 700;
+      color: var(--gold-lt);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-label {
+      font-size: .85rem; color: var(--muted); line-height: 1.4;
+    }
+
+    /* ── SECTION BASE ── */
+    section {
+      padding: clamp(60px, 8vw, 120px) clamp(20px, 8vw, 140px);
+    }
+    .inner { max-width: 1200px; margin: 0 auto; }
+    .section-tag {
+      font-size: .72rem; font-weight: 600; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 16px;
+    }
+    h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 700; line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    h2 em { font-style: italic; color: var(--gold-lt); }
+    .lead {
+      font-size: clamp(.95rem, 1.2vw, 1.05rem);
+      color: var(--muted); line-height: 1.75;
+      max-width: 600px;
+      margin-bottom: 56px;
+    }
+
+    /* ── PROBLEM ── */
+    .problem-section { background: var(--bg2); }
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .problem-card {
+      background: var(--bg);
+      border: 1px solid var(--faint);
+      border-radius: 6px;
+      padding: 36px 28px;
+      transition: border-color .2s;
+    }
+    .problem-card:hover { border-color: var(--gold-line); }
+    .problem-icon {
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+    .problem-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 600;
+      color: var(--text); margin-bottom: 12px;
+      line-height: 1.2;
+    }
+    .problem-card p {
+      font-size: .88rem; color: var(--muted); line-height: 1.65;
+    }
+
+    /* ── MODULES ── */
+    .modules-section { background: var(--bg); }
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .module-card {
+      background: var(--bg3);
+      border: 1px solid var(--faint);
+      border-radius: 6px;
+      padding: 32px;
+      transition: border-color .25s, transform .2s;
+      cursor: default;
+    }
+    .module-card:hover {
+      border-color: var(--gold-line);
+      transform: translateY(-3px);
+    }
+    .module-num {
+      font-size: .72rem; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 14px;
+    }
+    .module-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem; font-weight: 600;
+      color: var(--text); margin-bottom: 14px;
+      line-height: 1.2;
+    }
+    .module-card p {
+      font-size: .85rem; color: var(--muted); line-height: 1.65;
+      margin-bottom: 20px;
+    }
+    .module-lessons {
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .lesson-chip {
+      font-size: .72rem; color: var(--muted);
+      background: var(--bg2);
+      border: 1px solid var(--faint);
+      padding: 4px 10px; border-radius: 100px;
+    }
+
+    /* ── OUTCOMES ── */
+    .outcomes-section { background: var(--bg2); }
+    .outcomes-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .outcome-list {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+    .outcome-list li {
+      display: flex; gap: 14px; align-items: flex-start;
+      font-size: .9rem; color: var(--text); line-height: 1.5;
+    }
+    .outcome-list li::before {
+      content: '';
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      margin-top: 1px;
+      background: var(--gold-dim);
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6l3 3 5-5' stroke='%23C4882C' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    .vorlage-box {
+      background: var(--bg);
+      border: 1px solid var(--gold-line);
+      border-radius: 8px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .vorlage-box::after {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(196,136,44,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .vorlage-badge {
+      display: inline-block;
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-line);
+      color: var(--gold);
+      font-size: .7rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 100px;
+      margin-bottom: 20px;
+    }
+    .vorlage-box h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem; font-weight: 600;
+      color: var(--text); margin-bottom: 14px;
+      line-height: 1.2;
+    }
+    .vorlage-box p {
+      font-size: .88rem; color: var(--muted); line-height: 1.7;
+    }
+    .vorlage-items {
+      list-style: none;
+      margin-top: 20px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .vorlage-items li {
+      font-size: .83rem; color: var(--text);
+      display: flex; gap: 10px; align-items: center;
+    }
+    .vorlage-items li::before {
+      content: '→';
+      color: var(--gold);
+      font-size: .8rem;
+    }
+
+    /* ── QUOTE ── */
+    .quote-section {
+      background: var(--bg);
+      border-top: 1px solid var(--faint);
+      border-bottom: 1px solid var(--faint);
+      padding: clamp(50px, 6vw, 80px) clamp(20px, 8vw, 140px);
+    }
+    .quote-inner {
+      max-width: 800px; margin: 0 auto; text-align: center;
+    }
+    blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-style: italic;
+      line-height: 1.45;
+      color: var(--text);
+    }
+    blockquote span { color: var(--gold-lt); }
+
+    /* ── PRICING ── */
+    .pricing-section { background: var(--bg2); }
+    .pricing-inner {
+      max-width: 600px; margin: 0 auto; text-align: center;
+    }
+    .pricing-inner h2 { margin-bottom: 14px; }
+    .pricing-inner .lead { margin: 0 auto 48px; text-align: center; }
+    .price-box {
+      background: var(--bg);
+      border: 1px solid var(--gold-line);
+      border-radius: 10px;
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .price-box::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-lt), var(--gold));
+    }
+    .price-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem; font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .price-amount span {
+      font-size: 1.5rem; color: var(--muted); vertical-align: top;
+      padding-top: 8px; display: inline-block;
+    }
+    .price-note {
+      font-size: .8rem; color: var(--muted);
+      margin-bottom: 36px;
+    }
+    .price-includes {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 36px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .price-includes li {
+      display: flex; gap: 12px; align-items: center;
+      font-size: .88rem; color: var(--text);
+    }
+    .price-includes li span.check {
+      color: var(--gold); font-size: .8rem;
+      background: var(--gold-dim);
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .btn-big {
+      display: block; width: 100%;
+      background: var(--gold);
+      color: #0C0B09;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      letter-spacing: .04em;
+      border: none; cursor: pointer;
+      padding: 18px 36px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      margin-bottom: 16px;
+    }
+    .btn-big:hover {
+      background: var(--gold-lt);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(196,136,44,0.3);
+    }
+    .price-guarantee {
+      font-size: .78rem; color: var(--muted);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--faint);
+      padding: 32px clamp(20px, 8vw, 140px);
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; color: var(--muted); text-decoration: none;
+    }
+    .footer-logo span { color: var(--gold); }
+    .footer-links {
+      display: flex; gap: 24px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: .78rem; color: var(--muted);
+      text-decoration: none;
+      transition: color .15s;
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero-grid, .outcomes-inner { grid-template-columns: 1fr; gap: 40px; }
+      .hero-stats { grid-template-columns: 1fr 1fr; }
+      .problem-grid, .modules-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 580px) {
+      .hero-stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Zahlen.<span>Preise.</span>Gewinn.</a>
+  <a href="#kurs-starten" class="btn-nav">Jetzt starten</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-tag">Für Gastronomen</div>
+      <h1>Weißt du genau, wie viel Gewinn du pro Gericht machst?<br><em>Nicht ungefähr. Sondern genau.</em></h1>
+      <p class="hero-sub">
+        In Deutschland schließen jedes Jahr tausende Gastronomiebetriebe.
+        Nicht wegen schlechtem Essen. Nicht wegen falscher Lage.
+        Sondern weil die Zahlen nicht gestimmt haben.
+      </p>
+      <div class="hero-cta">
+        <a href="#kurs-starten" class="btn-primary">Zum Kurs →</a>
+        <span class="hero-note">6 Module · 36 Lektionen · inkl. Vorlage</span>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-number">36</div>
+        <div class="stat-label">Praxis-Lektionen aus echten Gastronomie-Erfahrungen — keine Theorie</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">30</div>
+        <div class="stat-label">Tage. So lang dauert es deinen Betrieb vollständig durchzukalkulieren</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">6</div>
+        <div class="stat-label">Module — von Wareneinsatz bis Break-Even, alles aufeinander aufgebaut</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem-section">
+  <div class="inner">
+    <div class="section-tag">Das Problem</div>
+    <h2>Das Restaurant ist voll.<br><em>Aber am Ende des Monats bleibt nichts übrig.</em></h2>
+    <p class="lead">
+      Du arbeitest täglich mit vollem Einsatz. Die Gäste sind zufrieden.
+      Und trotzdem reicht es nicht. Der Grund ist fast immer derselbe.
+    </p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <span class="problem-icon">📊</span>
+        <h3>Preise nach Gefühl — nicht nach Zahlen</h3>
+        <p>
+          Die meisten Gastronomen setzen Preise indem sie auf die Konkurrenz schauen.
+          Das Problem: Du weißt nicht ob die Konkurrenz damit Geld verdient.
+          Vielleicht macht sie auch Verluste.
+        </p>
+      </div>
+      <div class="problem-card">
+        <span class="problem-icon">🧾</span>
+        <h3>Wareneinsatz grob im Kopf kalkuliert</h3>
+        <p>
+          Das Schnitzel kostet 3 Euro, also 12 Euro Verkaufspreis — passt schon.
+          Aber was ist mit dem Öl, der Beilage, der Zitrone, dem Brot?
+          Plötzlich kostet das Gericht 5,20 Euro. Alles ändert sich.
+        </p>
+      </div>
+      <div class="problem-card">
+        <span class="problem-icon">📉</span>
+        <h3>Personalkosten unterschätzt</h3>
+        <p>
+          Ein Mitarbeiter mit 2.000 Euro Bruttolohn kostet in Wirklichkeit
+          2.600 bis 2.800 Euro — mit Lohnnebenkosten, Urlaub, Krankheitstagen.
+          Wer nur den Bruttolohn einrechnet, verliert still und leise Geld.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<div class="quote-section">
+  <div class="quote-inner">
+    <blockquote>
+      "Das sind Dinge die ich mir selbst gewünscht hätte —
+      ganz am Anfang meiner Zeit in der Gastronomie.
+      Damals musste ich vieles auf die <span>harte Tour</span> lernen.
+      Du musst das nicht."
+    </blockquote>
+  </div>
+</div>
+
+<!-- MODULES -->
+<section class="modules-section">
+  <div class="inner">
+    <div class="section-tag">Kursinhalt</div>
+    <h2>6 Module.<br><em>Ein vollständiges System.</em></h2>
+    <p class="lead">
+      Jedes Modul baut auf dem vorherigen auf. Am Ende hast du ein System
+      das dauerhaft funktioniert — nicht nur für heute.
+    </p>
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-num">Modul 01</div>
+        <h3>Die Grundlage</h3>
+        <p>Warum so viele Gastronomen trotz vollem Haus keinen Gewinn machen — und welche drei Zahlen wirklich zählen.</p>
+        <div class="module-lessons">
+          <span class="lesson-chip">Warum Preise falsch sind</span>
+          <span class="lesson-chip">Die 3 wichtigen Zahlen</span>
+          <span class="lesson-chip">Wie alles zusammenhängt</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">Modul 02</div>
+        <h3>Wareneinsatz</h3>
+        <p>Wie du für jedes Gericht den echten Wareneinsatz berechnest — inklusive aller versteckten Posten die sich summieren.</p>
+        <div class="module-lessons">
+          <span class="lesson-chip">Rezeptkalkulation</span>
+          <span class="lesson-chip">Food-Cost-Formel</span>
+          <span class="lesson-chip">Häufige Fehler</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">Modul 03</div>
+        <h3>Preise richtig setzen</h3>
+        <p>Die Preisformel die dir zeigt was dein Mindestverkaufspreis ist — und wie du Preise psychologisch clever kommunizierst.</p>
+        <div class="module-lessons">
+          <span class="lesson-chip">Die Preisformel</span>
+          <span class="lesson-chip">Psychologie der Preise</span>
+          <span class="lesson-chip">Kostenfresser erkennen</span>
+          <span class="lesson-chip">Preise erhöhen</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">Modul 04</div>
+        <h3>Personal & Fixkosten</h3>
+        <p>Was ein Mitarbeiter wirklich kostet, welche Fixkosten du oft übersiehst — und wie du Kosten systematisch senkst.</p>
+        <div class="module-lessons">
+          <span class="lesson-chip">Personalkosten %</span>
+          <span class="lesson-chip">Fixkosten vollständig</span>
+          <span class="lesson-chip">Gesamtkostenformel</span>
+          <span class="lesson-chip">Kosten senken</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">Modul 05</div>
+        <h3>Break-Even verstehen</h3>
+        <p>Ab wann du wirklich Gewinn machst — in Euro, in Gästen, in Tagen. Und was du tust wenn du ihn nicht erreichst.</p>
+        <div class="module-lessons">
+          <span class="lesson-chip">Break-Even-Formel</span>
+          <span class="lesson-chip">Gäste & Tage berechnen</span>
+          <span class="lesson-chip">Rückwärts planen</span>
+          <span class="lesson-chip">Was wenn nicht?</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">Modul 06</div>
+        <h3>Das System etablieren</h3>
+        <p>Monatliche Kontrollroutine, konkreter 30-Tage-Umsetzungsplan — und die Vorlage die alles zusammenhält.</p>
+        <div class="module-lessons">
+          <span class="lesson-chip">Kontrollroutine</span>
+          <span class="lesson-chip">Wann Preise erhöhen</span>
+          <span class="lesson-chip">Die Vorlage</span>
+          <span class="lesson-chip">30-Tage-Plan</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTCOMES -->
+<section class="outcomes-section">
+  <div class="inner">
+    <div class="outcomes-inner">
+      <div>
+        <div class="section-tag">Was du danach weißt</div>
+        <h2>Nach 30 Tagen weißt du genau<br><em>wo dein Betrieb steht.</em></h2>
+        <p class="lead" style="margin-bottom:0">
+          Kein Rätselraten mehr. Keine Schätzungen.
+          Zahlen die dir sagen was du tun musst.
+        </p>
+      </div>
+      <div>
+        <ul class="outcome-list">
+          <li>Du kalkulierst jeden Artikel deiner Karte auf den Cent genau</li>
+          <li>Du weißt welcher Mindestpreis dir wirklich Gewinn bringt</li>
+          <li>Du erkennst welche Gerichte Gewinn machen — und welche versteckte Verluste sind</li>
+          <li>Du verstehst was deine Mitarbeiter dich wirklich kosten</li>
+          <li>Du berechnest deinen Break-Even — in Euro, in Gästen, in Tagen</li>
+          <li>Du hast eine monatliche Kontrollroutine die dauerhaft funktioniert</li>
+          <li>Du weißt wann und wie du Preise schrittweise erhöhen kannst</li>
+          <li>Du hast eine fertige Kalkulations-Vorlage für sofortigen Einsatz</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:60px">
+      <div class="vorlage-box">
+        <span class="vorlage-badge">Inklusive</span>
+        <h3>Die Kalkulations-Vorlage</h3>
+        <p>Du bekommst eine fertige Vorlage mit der du sofort loslegen kannst — kein leeres Excel mehr, kein Raten mehr.</p>
+        <ul class="vorlage-items">
+          <li>Rezeptkalkulation mit automatischer Food-Cost-Berechnung</li>
+          <li>Preisformel-Rechner mit deinem Ziel-Food-Cost-Prozentsatz</li>
+          <li>Personalkosten-Rechner inkl. Lohnnebenkosten</li>
+          <li>Break-Even-Rechner in Euro, Gästen und Tagen</li>
+          <li>Monatliche Kontrollroutine als Checkliste</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="kurs-starten">
+  <div class="inner">
+    <div class="pricing-inner">
+      <div class="section-tag">Jetzt starten</div>
+      <h2>Einmal kaufen.<br><em>Dauerhaft profitieren.</em></h2>
+      <p class="lead">
+        Einmaliger Kaufpreis. Kein Abo. Dauerhafter Zugang zu allen Inhalten und der Vorlage.
+      </p>
+      <div class="price-box">
+        <div class="price-amount"><span>€</span>129,00</div>
+        <div class="price-note">zzgl. MwSt. · Einmalig · Kein Abo</div>
+        <ul class="price-includes">
+          <li><span class="check">✓</span> 36 Video-Lektionen in 6 Modulen</li>
+          <li><span class="check">✓</span> Kalkulations-Vorlage (sofort einsatzbereit)</li>
+          <li><span class="check">✓</span> 30-Tage-Umsetzungsplan</li>
+          <li><span class="check">✓</span> Dauerhafter Zugang zu allen Inhalten</li>
+          <li><span class="check">✓</span> Kein Gastronomie-Vorwissen nötig</li>
+        </ul>
+        <a href="#" class="btn-big">Jetzt Kurs kaufen →</a>
+        <p class="price-guarantee">
+          Praxis-Kurs aus echter Gastronomie-Erfahrung.
+          Keine Theorie — nur was wirklich funktioniert.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">Zahlen.<span>Preise.</span>Gewinn.</a>
+  <ul class="footer-links">
+    <li><a href="/impressum">Impressum</a></li>
+    <li><a href="/datenschutz">Datenschutz</a></li>
+    <li><a href="mailto:info@awedi.info">Kontakt</a></li>
+  </ul>
+</footer>
+
+</body>
+</html>
