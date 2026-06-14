@@ -193,6 +193,7 @@
       display: flex; flex-direction: column;
     }
 
+    /* ── VIDEO AREA ── */
     .video-area {
       background: #080806;
       width: 100%;
@@ -200,15 +201,20 @@
       max-height: 62vh;
       flex-shrink: 0;
       position: relative;
+      user-select: none;
     }
+
     #player {
       width: 100%; height: 100%;
       display: block;
+      cursor: pointer;
     }
+
     .placeholder {
       position: absolute; inset: 0;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center; gap: 14px;
+      pointer-events: none;
     }
     .placeholder-ring {
       width: 64px; height: 64px;
@@ -221,6 +227,126 @@
       letter-spacing: .08em; text-transform: uppercase;
     }
 
+    /* ── CUSTOM VIDEO CONTROLS ── */
+    .v-controls {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+      padding: 36px 14px 12px;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity .22s;
+      pointer-events: none;
+    }
+    .video-area.has-src:hover .v-controls,
+    .video-area.has-src.paused .v-controls {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .v-progress-wrap {
+      margin-bottom: 10px;
+      padding: 5px 0;
+      cursor: pointer;
+    }
+    .v-progress-bg {
+      height: 3px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 99px;
+      position: relative;
+      transition: height .15s;
+    }
+    .v-progress-wrap:hover .v-progress-bg,
+    .v-progress-wrap.scrubbing .v-progress-bg { height: 4px; }
+
+    .v-progress-fill {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+      border-radius: 99px;
+      width: 0%;
+      pointer-events: none;
+    }
+    .v-progress-thumb {
+      position: absolute;
+      top: 50%; left: 0%;
+      width: 13px; height: 13px;
+      background: var(--gold-lt);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      box-shadow: 0 0 8px rgba(240,182,80,0.55);
+      pointer-events: none;
+      transition: transform .15s;
+    }
+    .v-progress-wrap:hover .v-progress-thumb,
+    .v-progress-wrap.scrubbing .v-progress-thumb { transform: translate(-50%, -50%) scale(1); }
+
+    .v-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .v-btn {
+      background: none; border: none;
+      color: rgba(232,226,213,0.85); cursor: pointer;
+      width: 30px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 3px;
+      transition: color .15s;
+      flex-shrink: 0;
+      padding: 0;
+    }
+    .v-btn:hover { color: var(--gold-lt); }
+
+    .v-time {
+      font-size: .7rem;
+      color: rgba(232,226,213,0.6);
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: .01em;
+      min-width: 86px;
+    }
+
+    .v-spacer { flex: 1; }
+
+    .v-speed {
+      appearance: none;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(232,226,213,0.8);
+      font-size: .7rem;
+      font-family: 'DM Sans', sans-serif;
+      padding: 3px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+      outline: none;
+      transition: border-color .15s, color .15s;
+    }
+    .v-speed:hover { border-color: var(--gold-line); color: var(--text); }
+    .v-speed option { background: #1A1710; color: var(--text); }
+
+    /* click feedback flash */
+    .v-flash {
+      position: absolute;
+      inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+      z-index: 9;
+    }
+    .v-flash-ring {
+      width: 56px; height: 56px;
+      border: 2px solid rgba(196,136,44,0.7);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.35);
+      opacity: 0;
+      transition: opacity .06s;
+    }
+    .v-flash-ring.show { opacity: 1; }
+    .v-flash-ring.hide { opacity: 0; transition: opacity .4s; }
+
+    /* ── LESSON INFO ── */
     .lesson-info {
       padding: 24px 32px 20px;
       border-bottom: 1px solid var(--faint);
@@ -300,6 +426,72 @@
     }
     .btn-dl:hover { background: var(--gold-lt); transform: translateY(-1px); }
 
+    /* ── PASSWORD GATE ── */
+    .gate {
+      position: fixed; inset: 0; z-index: 999;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .gate-box {
+      width: 100%; max-width: 380px;
+      background: var(--bg2);
+      border: 1px solid var(--faint);
+      border-radius: 8px;
+      padding: 40px 36px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .gate-box::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-lt), var(--gold));
+    }
+    .gate-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 600;
+      letter-spacing: .04em; color: var(--text);
+      margin-bottom: 6px;
+    }
+    .gate-logo span { color: var(--gold); }
+    .gate-sub {
+      font-size: .78rem; color: var(--muted);
+      margin-bottom: 28px; line-height: 1.5;
+    }
+    .gate-field {
+      display: flex; gap: 8px;
+      margin-bottom: 10px;
+    }
+    .gate-field input {
+      flex: 1;
+      background: var(--bg3);
+      border: 1px solid var(--faint);
+      border-radius: 3px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: .85rem;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .gate-field input:focus { border-color: var(--gold-line); }
+    .gate-field input::placeholder { color: var(--muted); }
+    .gate-field button {
+      background: var(--gold); color: #0C0B09;
+      border: none; border-radius: 3px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .82rem; font-weight: 700;
+      padding: 10px 18px; cursor: pointer;
+      white-space: nowrap;
+      transition: background .15s;
+    }
+    .gate-field button:hover { background: var(--gold-lt); }
+    .gate-error {
+      font-size: .75rem; color: #e05a5a;
+      min-height: 18px;
+    }
+
     @media (max-width: 780px) {
       aside {
         position: fixed; top: 60px; left: 0; bottom: 0; z-index: 50;
@@ -319,6 +511,19 @@
   </style>
 </head>
 <body>
+
+<!-- PASSWORD GATE -->
+<div class="gate" id="gate">
+  <div class="gate-box">
+    <div class="gate-logo">Zahlen.<span>Preise.</span>Gewinn.</div>
+    <p class="gate-sub">Kursbereich — bitte gib dein Zugangspasswort ein</p>
+    <div class="gate-field">
+      <input type="password" id="gate-input" placeholder="Passwort" onkeydown="if(event.key==='Enter')checkGate()">
+      <button onclick="checkGate()">Zugang →</button>
+    </div>
+    <p class="gate-error" id="gate-error"></p>
+  </div>
+</div>
 
 <header>
   <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Menü">
@@ -342,13 +547,48 @@
   <aside id="sidebar"></aside>
 
   <main>
-    <div class="video-area">
-      <video id="player" controls preload="metadata" style="display:none"></video>
+    <div class="video-area" id="video-area" onclick="handleVideoClick(event)">
+      <video id="player" preload="metadata"></video>
+
       <div class="placeholder" id="placeholder">
         <div class="placeholder-ring">
           <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#C4882C" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         </div>
         <p>Lektion wählen</p>
+      </div>
+
+      <!-- click flash feedback -->
+      <div class="v-flash" id="v-flash">
+        <div class="v-flash-ring" id="v-flash-ring">
+          <svg id="v-flash-icon" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#F0B650" stroke-width="2"></svg>
+        </div>
+      </div>
+
+      <!-- custom controls -->
+      <div class="v-controls" id="v-controls" onclick="event.stopPropagation()">
+        <div class="v-progress-wrap" id="v-progress-wrap">
+          <div class="v-progress-bg" id="v-progress-bg">
+            <div class="v-progress-fill" id="v-progress-fill"></div>
+            <div class="v-progress-thumb" id="v-progress-thumb"></div>
+          </div>
+        </div>
+        <div class="v-bar">
+          <button class="v-btn" id="v-play-btn" onclick="togglePlay()" title="Play/Pause">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg>
+          </button>
+          <span class="v-time" id="v-time">0:00 / 0:00</span>
+          <div class="v-spacer"></div>
+          <select class="v-speed" id="v-speed" onchange="changeSpeed(this.value)" title="Abspielgeschwindigkeit">
+            <option value="0.75">0.75×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.25">1.25×</option>
+            <option value="1.5">1.5×</option>
+            <option value="2">2×</option>
+          </select>
+          <button class="v-btn" id="v-fs-btn" onclick="toggleFullscreen()" title="Vollbild">
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -484,6 +724,7 @@ function videoPath(id) {
   return `/kurs/videos/Modul_${parseInt(id.substring(0,2))}/${FILE_MAP[id]}.mp4`;
 }
 
+// ── PROGRESS / DONE ──
 function getProgress() {
   try { return JSON.parse(localStorage.getItem('kurs_done') || '{}'); } catch { return {}; }
 }
@@ -493,21 +734,214 @@ function setDone(id) {
 }
 function isDone(id) { return !!getProgress()[id]; }
 
+// ── POSITION PERSISTENCE ──
+function savePos(id, time) {
+  try {
+    const pos = JSON.parse(localStorage.getItem('kurs_pos') || '{}');
+    if (time > 5) pos[id] = Math.floor(time);
+    else delete pos[id];
+    localStorage.setItem('kurs_pos', JSON.stringify(pos));
+  } catch {}
+}
+function getPos(id) {
+  try { return JSON.parse(localStorage.getItem('kurs_pos') || '{}')[id] || 0; } catch { return 0; }
+}
+
+// ── CUSTOM CONTROLS ──
+const player = document.getElementById('player');
+const videoArea = document.getElementById('video-area');
+const progressWrap = document.getElementById('v-progress-wrap');
+let scrubbing = false;
+let lastSaveTime = 0;
+
+player.addEventListener('timeupdate', () => {
+  if (scrubbing || !player.duration) return;
+  const pct = player.currentTime / player.duration;
+  updateProgressBar(pct);
+  document.getElementById('v-time').textContent = `${fmtTime(player.currentTime)} / ${fmtTime(player.duration)}`;
+  const now = Math.floor(player.currentTime);
+  if (currentIdx >= 0 && now !== lastSaveTime && now % 4 === 0) {
+    lastSaveTime = now;
+    savePos(allLessons[currentIdx].id, player.currentTime);
+  }
+});
+
+function fmtTime(s) {
+  if (!s || isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2, '0')}`;
+}
+
+function updateProgressBar(pct) {
+  const fill = document.getElementById('v-progress-fill');
+  const thumb = document.getElementById('v-progress-thumb');
+  fill.style.width = (pct * 100) + '%';
+  thumb.style.left = (pct * 100) + '%';
+}
+
+function setPlayBtnIcon(playing) {
+  document.getElementById('v-play-btn').innerHTML = playing
+    ? `<svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>`
+    : `<svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+}
+
+function showFlash(playing) {
+  const ring = document.getElementById('v-flash-ring');
+  const icon = document.getElementById('v-flash-icon');
+  icon.innerHTML = playing
+    ? `<polygon points="5 3 19 12 5 21 5 3" fill="#F0B650" stroke="none"/>`
+    : `<rect x="6" y="4" width="4" height="16" rx="1" fill="#F0B650"/><rect x="14" y="4" width="4" height="16" rx="1" fill="#F0B650"/>`;
+  ring.classList.remove('hide');
+  ring.classList.add('show');
+  setTimeout(() => { ring.classList.remove('show'); ring.classList.add('hide'); }, 180);
+}
+
+function togglePlay() {
+  if (!videoArea.classList.contains('has-src')) return;
+  if (player.paused) {
+    player.play();
+    showFlash(true);
+  } else {
+    player.pause();
+    showFlash(false);
+  }
+}
+
+function handleVideoClick(e) {
+  if (e.target.closest('.v-controls')) return;
+  togglePlay();
+}
+
+player.addEventListener('play', () => {
+  videoArea.classList.remove('paused');
+  setPlayBtnIcon(true);
+});
+player.addEventListener('pause', () => {
+  videoArea.classList.add('paused');
+  setPlayBtnIcon(false);
+});
+player.addEventListener('loadedmetadata', () => {
+  document.getElementById('v-time').textContent = `0:00 / ${fmtTime(player.duration)}`;
+});
+
+// speed
+function changeSpeed(val) {
+  player.playbackRate = parseFloat(val);
+  localStorage.setItem('kurs_speed', val);
+}
+
+// fullscreen
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    videoArea.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen();
+  }
+}
+document.addEventListener('fullscreenchange', () => {
+  const btn = document.getElementById('v-fs-btn');
+  if (document.fullscreenElement) {
+    btn.innerHTML = `<svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 3v3a2 2 0 01-2 2H3m18 0h-3a2 2 0 01-2-2V3m0 18v-3a2 2 0 012-2h3M3 16h3a2 2 0 012 2v3"/></svg>`;
+  } else {
+    btn.innerHTML = `<svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>`;
+  }
+});
+
+// keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+  if (!videoArea.classList.contains('has-src')) return;
+  if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+  if (e.code === 'ArrowRight') { e.preventDefault(); player.currentTime = Math.min(player.duration, player.currentTime + 10); }
+  if (e.code === 'ArrowLeft') { e.preventDefault(); player.currentTime = Math.max(0, player.currentTime - 10); }
+  if (e.code === 'KeyF') toggleFullscreen();
+});
+
+// scrubbing
+function getScrubPct(e) {
+  const rect = progressWrap.getBoundingClientRect();
+  return Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+}
+progressWrap.addEventListener('mousedown', (e) => {
+  scrubbing = true;
+  progressWrap.classList.add('scrubbing');
+  const pct = getScrubPct(e);
+  updateProgressBar(pct);
+  document.getElementById('v-time').textContent = `${fmtTime(pct * player.duration)} / ${fmtTime(player.duration)}`;
+});
+document.addEventListener('mousemove', (e) => {
+  if (!scrubbing) return;
+  const pct = getScrubPct(e);
+  updateProgressBar(pct);
+  document.getElementById('v-time').textContent = `${fmtTime(pct * player.duration)} / ${fmtTime(player.duration)}`;
+});
+document.addEventListener('mouseup', (e) => {
+  if (!scrubbing) return;
+  scrubbing = false;
+  progressWrap.classList.remove('scrubbing');
+  player.currentTime = getScrubPct(e) * player.duration;
+});
+
+// touch scrubbing
+progressWrap.addEventListener('touchstart', (e) => {
+  scrubbing = true;
+  progressWrap.classList.add('scrubbing');
+}, { passive: true });
+document.addEventListener('touchmove', (e) => {
+  if (!scrubbing) return;
+  const touch = e.touches[0];
+  const rect = progressWrap.getBoundingClientRect();
+  const pct = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
+  updateProgressBar(pct);
+  document.getElementById('v-time').textContent = `${fmtTime(pct * player.duration)} / ${fmtTime(player.duration)}`;
+}, { passive: true });
+document.addEventListener('touchend', (e) => {
+  if (!scrubbing) return;
+  scrubbing = false;
+  progressWrap.classList.remove('scrubbing');
+  const touch = e.changedTouches[0];
+  const rect = progressWrap.getBoundingClientRect();
+  const pct = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
+  player.currentTime = pct * player.duration;
+});
+
+// ── LESSON LOADING ──
 let currentIdx = -1;
 
 function loadLesson(idx) {
   if (idx < 0 || idx >= TOTAL) return;
+
+  if (currentIdx >= 0) savePos(allLessons[currentIdx].id, player.currentTime);
   currentIdx = idx;
   const lesson = allLessons[idx];
 
-  const player = document.getElementById('player');
-  const placeholder = document.getElementById('placeholder');
+  videoArea.classList.add('has-src');
+  videoArea.classList.add('paused');
+  document.getElementById('placeholder').style.display = 'none';
+
+  updateProgressBar(0);
+  document.getElementById('v-time').textContent = '0:00 / 0:00';
+
   player.src = videoPath(lesson.id);
   player.load();
-  player.style.display = 'block';
-  placeholder.style.display = 'none';
+  setPlayBtnIcon(false);
+
+  // restore speed preference
+  const savedSpeed = localStorage.getItem('kurs_speed') || '1';
+  document.getElementById('v-speed').value = savedSpeed;
+  player.playbackRate = parseFloat(savedSpeed);
+
+  player.addEventListener('loadedmetadata', () => {
+    const savedPos = getPos(lesson.id);
+    if (savedPos > 5 && savedPos < player.duration - 5) {
+      player.currentTime = savedPos;
+    }
+    player.play().catch(() => {});
+  }, { once: true });
 
   player.onended = () => {
+    savePos(lesson.id, 0);
     setDone(lesson.id);
     updateProgress();
     renderSidebar();
@@ -578,6 +1012,29 @@ function toggleModule(el) {
 
 function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ── PASSWORD GATE ──
+// Passwort hier ändern:
+const COURSE_PW = 'GastroKurs2026';
+
+function checkGate() {
+  const val = document.getElementById('gate-input').value;
+  if (val === COURSE_PW) {
+    localStorage.setItem('kurs_access', '1');
+    document.getElementById('gate').style.display = 'none';
+  } else {
+    document.getElementById('gate-error').textContent = 'Falsches Passwort — bitte prüfe deine Bestätigungsmail.';
+    document.getElementById('gate-input').value = '';
+    document.getElementById('gate-input').focus();
+  }
+}
+
+if (localStorage.getItem('kurs_access') === '1') {
+  document.getElementById('gate').style.display = 'none';
+} else {
+  document.getElementById('gate').style.display = 'flex';
+  setTimeout(() => document.getElementById('gate-input').focus(), 100);
 }
 
 renderSidebar();
