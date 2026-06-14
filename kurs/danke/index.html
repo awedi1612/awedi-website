@@ -1015,12 +1015,19 @@ function toggleSidebar() {
 }
 
 // ── PASSWORD GATE ──
-// Passwort hier ändern:
-const COURSE_PW = 'GastroKurs2026';
+// Zum Ändern: SHA-256-Hash des neuen Passworts hier eintragen.
+// Hash berechnen: PowerShell → $bytes=[System.Text.Encoding]::UTF8.GetBytes("NeuesPasswort"); [System.BitConverter]::ToString([System.Security.Cryptography.SHA256]::Create().ComputeHash($bytes)).Replace("-","").ToLower()
+const COURSE_HASH = '8c4999519db36c1f062405743e9d5007128a4648170393440668ef0ff8462295';
 
-function checkGate() {
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function checkGate() {
   const val = document.getElementById('gate-input').value;
-  if (val === COURSE_PW) {
+  const hash = await sha256(val);
+  if (hash === COURSE_HASH) {
     localStorage.setItem('kurs_access', '1');
     document.getElementById('gate').style.display = 'none';
   } else {
